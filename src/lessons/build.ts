@@ -87,7 +87,7 @@ export type ConversationManifest = {
 };
 
 export type NounDef = { key: string; label: string; gloss?: string };
-export type VerbDef = { key: string; label: string; gloss?: string };
+export type VerbDef = { key: string; label: string; gloss?: string; complement?: string };
 
 export function buildManifest(opts: {
   id: string;
@@ -107,7 +107,7 @@ export function buildManifest(opts: {
   const lesson = opts.id.replace(/^([a-z]{2}-)?lesson-/, "");
   const phrases = opts.nouns.flatMap((noun) =>
     opts.verbs.map((verb) => {
-      const combo = `${noun.key}-${verb.key}`;
+      const combo = `${noun.key}-${verb.key}${verb.complement ? `-${verb.complement}` : ""}`;
       const audioUrls = opts.audioVoices?.length
         ? Object.fromEntries(opts.audioVoices.map((v) => [v.voice, v.audioUrl(combo)]))
         : undefined;
