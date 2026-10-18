@@ -141,7 +141,7 @@ function fakeConversation(unit: number, lang: Lang): ConversationManifest {
     id: `${lang}-conv-${unit}-${i + 1}`,
     text: `${lang === "xx" ? "Xx" : "Yy"} wug ${unit} line ${i + 1}.`,
     audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-l${i + 1}.mp3`,
-    imageUrl: `/static/lesson-001/images/conv-u${unit}.jpg`,
+    imageUrl: `/static/lesson-001/images/conv-u${unit}-l${i + 1}.jpg`,
     speaker: (i % 2 === 0 ? "A" : "B") as "A" | "B",
   }));
   return {

@@ -1528,10 +1528,12 @@ async function bootConversation(lang, unit) {
     talk.addEventListener("change", () => { cantTalk = talk.checked; });
     const watch = h("button", { class: "btn ghost" }, "\u25B6 " + scene.title);
     watch.addEventListener("click", async () => {
+      const hero = appImg({ class: "hero-img", src: scene.imageUrl, alt: "" });
       player.screen(h("div", { class: "screen" },
-        appImg({ class: "hero-img", src: scene.imageUrl, alt: "" }),
+        hero,
         ...scene.lines.map((l) => h("p", { class: `bubble ${l.speaker === "A" ? "bubble-a" : "bubble-b"}` }, l.text))));
       for (const l of scene.lines) {
+        if (l.imageUrl && hero.getAttribute("src") !== l.imageUrl) hero.setAttribute("src", l.imageUrl);
         await new Promise((resolve) => {
           const a = new Audio(encodeURI(l.audioUrl));
           a.addEventListener("ended", resolve, { once: true });

@@ -13,6 +13,15 @@ describe("conversation lessons (Phase 2)", () => {
     }
   });
 
+  it("gives every conversation line its own image", () => {
+    for (const unit of [1, 2]) {
+      const scene = conversations[unit]?.xx;
+      const images = scene!.lines.map((l) => l.imageUrl);
+      expect(new Set(images).size).toBe(images.length);
+      expect(images).not.toContain(scene!.imageUrl);
+    }
+  });
+
   it("serves the Unit 1 conversation scene shape", async () => {
     const res = await app.request("/api/conversation/xx/1");
     expect(res.status).toBe(200);
