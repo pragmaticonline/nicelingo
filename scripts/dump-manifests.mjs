@@ -26,7 +26,7 @@ execFileSync(
   ],
   { cwd: root, stdio: "pipe" },
 );
-const { lessons } = createRequire(import.meta.url)(join(tmp, "curriculum.js"));
+const { lessons, conversations } = createRequire(import.meta.url)(join(tmp, "curriculum.js"));
 
 const want = process.argv.slice(2);
 const numbers = Object.keys(lessons)
@@ -43,6 +43,13 @@ for (const n of numbers) {
       JSON.stringify(lessons[n][lang]),
     );
     console.log(`${lang}-${n}: ${lessons[n][lang].phrases[0].text}`);
+  }
+}
+// Conversation scenes: conv-{lang}-{unit}.json for word-audio tooling.
+for (const [unit, langs] of Object.entries(conversations ?? {})) {
+  for (const [lang, scene] of Object.entries(langs ?? {})) {
+    if (!scene) continue;
+    writeFileSync(join(outDir, `conv-${lang}-${unit}.json`), JSON.stringify(scene));
   }
 }
 console.log("done");

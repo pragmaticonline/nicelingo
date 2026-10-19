@@ -1,4 +1,5 @@
 import {
+  blankAnswerIsName,
   blanked,
   buildQuestions,
   buildSpeakPlan,
@@ -6,6 +7,7 @@ import {
   langFromPath,
   lessonFromPath,
   nextIncomplete,
+  normalizeAnswer,
   readWritePicks,
 } from "./lesson-flow.js";
 import { createQueue } from "./sync-queue.js";
@@ -425,8 +427,11 @@ function renderPhraseWrap(wrap) {
 }
 
 // The help button that replaces slow playback: pressing it reveals
-// the phrase's tappable words; pressing it again hides them.
+// the phrase's tappable words; pressing it again hides them. With no
+// word data and no reveal target it would do nothing, so it is not
+// shown at all.
 function helpButton(phrase, onToggle) {
+  if (!onToggle && !phrase?.words?.length) return h("span", { hidden: true });
   const b = h(
     "button",
     { class: "speaker help", "aria-label": S.helpWords, title: S.helpWords, "aria-pressed": "false" },
@@ -1161,15 +1166,6 @@ function cpSegments(idx, total, doneCount) {
   });
 }
 
-function normalizeAnswer(s) {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{M}/gu, "")
-    .replace(/[.!?]+$/, "")
-    .trim();
-}
-
 function runSession({ questions, pool, title, onDone }) {
   let idx = 0;
   let score = 0;
@@ -1546,15 +1542,18 @@ async function bootConversation(lang, unit) {
     const start = h("button", { class: "btn" }, S.checkpointStart);
     start.addEventListener("click", () => {
       const spoken = (a) => (cantTalk ? "read-write" : a);
+      // A write question whose blank is a proper name ("Me llamo
+      // Ana.") becomes a picture choice instead.
+      const writeSafe = (l, a) => (a === "read-write" && blankAnswerIsName(l.text) ? "image-phrase" : a);
       const questions = [];
       for (const q of scene.comprehension ?? []) questions.push({ phrase: q.prompt, activity: "listen-match" });
       for (const q of scene.readCard?.questions ?? []) questions.push({ phrase: q.prompt, activity: "image-phrase" });
       const bLines = scene.lines.filter((l) => l.speaker === "B");
       const aLines = scene.lines.filter((l) => l.speaker === "A");
-      for (const l of bLines) questions.push({ phrase: l, activity: spoken("speak-score") });
-      if (bLines[0] && !cantTalk) questions.push({ phrase: bLines[0], activity: "read-write" });
-      for (const l of bLines) questions.push({ phrase: l, activity: spoken("recall") });
-      for (const l of aLines) questions.push({ phrase: l, activity: spoken("recall") });
+      for (const l of bLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("speak-score")) });
+      if (bLines[0] && !cantTalk) questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
+      for (const l of bLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("recall")) });
+      for (const l of aLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("recall")) });
       runSession({
         questions,
         pool: scene.lines,

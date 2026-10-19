@@ -79,13 +79,34 @@ export function readWritePicks(phrases) {
   return [phrases[2].id, phrases[5].id];
 }
 
+// Typed answers are forgiving: capitals, accents, and surrounding
+// punctuation (including Spanish ¡ ¿) never make an answer wrong.
+export function normalizeAnswer(s) {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .replace(/^[¡¿"'“”‘’(\s]+/, "")
+    .replace(/[.!?,;:"'“”‘’)\s]+$/, "")
+    .trim();
+}
+
+// True when a fill-the-blank write question would ask for a proper
+// name ("Me llamo ______." -> "Ana"): typing someone else's name
+// teaches nothing, so callers swap that question for another kind.
+export function blankAnswerIsName(text) {
+  const tokens = text.match(/[\p{L}]+/gu) ?? [];
+  if (tokens.length <= 1) return false;
+  return /^[\p{Lu}]/u.test(tokens[tokens.length - 1]);
+}
+
 export function blanked(text) {
   const words = text.replace(/\.$/, "").split(" ");
   const answer = words[words.length - 1];
   return {
     prompt: [...words.slice(0, -1), "______."].join(" "),
     answer,
-    check: (input) => input.trim().toLowerCase() === answer.toLowerCase(),
+    check: (input) => normalizeAnswer(input) === normalizeAnswer(answer),
   };
 }
 

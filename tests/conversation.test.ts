@@ -13,6 +13,20 @@ describe("conversation lessons (Phase 2)", () => {
     }
   });
 
+  it("gives every conversation line tap-to-hear words (help button)", () => {
+    for (const unit of [1, 2]) {
+      const scene = conversations[unit]?.xx;
+      for (const line of scene!.lines) {
+        expect(line.words?.length).toBeGreaterThan(0);
+        for (const w of line.words!) {
+          expect(w.text).toBeTruthy();
+          expect(w.gloss).toBeTruthy();
+          expect(w.audioUrl).toContain("/words/conv-");
+        }
+      }
+    }
+  });
+
   it("gives every conversation line its own image", () => {
     for (const unit of [1, 2]) {
       const scene = conversations[unit]?.xx;

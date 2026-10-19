@@ -55,7 +55,7 @@ for (const f of readdirSync(join(root, "scripts/manifests")).filter((x) => x.end
   const lang = m.id.startsWith("lesson") ? "en" : m.id.split("-")[0];
   if (!VOICES[lang]) continue;
   const byUrl = wanted.get(lang) ?? new Map();
-  for (const p of m.phrases) {
+  for (const p of m.phrases ?? m.lines ?? []) {
     for (const w of p.words ?? []) {
       if (!w.audioUrl || byUrl.has(w.audioUrl)) continue;
       const cleanUrl = w.audioUrl.split("?")[0];
@@ -142,13 +142,16 @@ function normalizeClip(dest) {
   } catch { /* probe failure leaves the clip as generated */ }
 }
 
-const langs = process.argv.slice(2).length ? process.argv.slice(2) : [...wanted.keys()];
+const onlyArg = process.argv.find((a) => a.startsWith("only:"));
+const onlySub = onlyArg ? onlyArg.slice(5) : null;
+const langs = process.argv.slice(2).filter((a) => !a.startsWith("only:")).length ? process.argv.slice(2).filter((a) => !a.startsWith("only:")) : [...wanted.keys()];
 let made = 0, skipped = 0, failed = 0;
 for (const lang of langs) {
   const voice = VOICES[lang];
   const byUrl = wanted.get(lang);
   if (!voice || !byUrl) { console.error(`no words for ${lang}`); continue; }
   const jobs = [...byUrl.entries()].filter(([url]) => {
+    if (onlySub && !url.includes(onlySub)) return false;
     if (existsSync(join(root, "public", url))) { skipped++; return false; }
     return true;
   });

@@ -58,6 +58,17 @@ describe("POST /api/score", () => {
     );
   });
 
+  it("scores conversation lines (not just photo-lesson phrases)", async () => {
+    mockedTranscribe.mockResolvedValueOnce("Xx wug 1 line 1.");
+    const res = await app.request("/api/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phraseId: "xx-conv-1-1", audio: "QUJD" }),
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ verdict: "green", pass: true });
+  });
+
   it("scores xx phrases against the xx manifest", async () => {
     mockedTranscribe.mockResolvedValueOnce("Xx xx-wug xx-zorping.");
     const res = await app.request("/api/score", {

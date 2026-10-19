@@ -137,13 +137,22 @@ export const lessons: Record<
  *  public tests cover the Phase 2 conversation path. Real scenes
  *  live in the content repo and replace this file wholesale. */
 function fakeConversation(unit: number, lang: Lang): ConversationManifest {
-  const lines = [0, 1, 2, 3].map((i) => ({
-    id: `${lang}-conv-${unit}-${i + 1}`,
-    text: `${lang === "xx" ? "Xx" : "Yy"} wug ${unit} line ${i + 1}.`,
-    audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-l${i + 1}.mp3`,
-    imageUrl: `/static/lesson-001/images/conv-u${unit}-l${i + 1}.jpg`,
-    speaker: (i % 2 === 0 ? "A" : "B") as "A" | "B",
-  }));
+  const lines = [0, 1, 2, 3].map((i) => {
+    const text = `${lang === "xx" ? "Xx" : "Yy"} wug ${unit} line ${i + 1}.`;
+    return {
+      id: `${lang}-conv-${unit}-${i + 1}`,
+      text,
+      audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-l${i + 1}.mp3`,
+      imageUrl: `/static/lesson-001/images/conv-u${unit}-l${i + 1}.jpg`,
+      speaker: (i % 2 === 0 ? "A" : "B") as "A" | "B",
+      // Tap-to-hear words, as the real scenes carry (help button).
+      words: text.replace(".", "").split(" ").map((w) => ({
+        text: w,
+        gloss: `meaning of ${w.toLowerCase()}`,
+        audioUrl: `/static/lesson-001/audio/${lang}/words/conv-${w.toLowerCase()}.mp3`,
+      })),
+    };
+  });
   return {
     id: `${lang}-conv-${unit}`,
     unit,

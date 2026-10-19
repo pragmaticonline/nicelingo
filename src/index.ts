@@ -530,16 +530,24 @@ app.post("/api/score", async (c) => {
   const phrase = Object.values(lessons)
     .flatMap((langs) => Object.values(langs))
     .flatMap((m) => m.phrases)
-    .find((p) => p.id === phraseId);
+    .find((p) => p.id === phraseId)
+    ?? Object.values(conversations)
+      .flatMap((langs) => Object.values(langs))
+      .flatMap((s) => s?.lines ?? [])
+      .find((p) => p.id === phraseId);
   if (!phrase || typeof audio !== "string") {
     return c.json({ error: "unknown phrase" }, 404);
   }
   // Scoring is gated like the manifest: open for Unit 1 (001-004; an
   // ungated endpoint would be a free transcription service), subscription
-  // otherwise. Unparseable ids default to gated.
-  const lesson = /^\d{3}-/.test(phraseId)
-    ? phraseId.slice(0, 3)
-    : (/^[a-z]{2}-(\d{3})-/.exec(phraseId)?.[1] ?? "999");
+  // otherwise. Unparseable ids default to gated. Conversation lines
+  // gate by their unit's first lesson (unit 1 -> 001, so free).
+  const convUnit = /-conv-(\d+)(?:-|$)/.exec(phraseId)?.[1];
+  const lesson = convUnit
+    ? String((Number(convUnit) - 1) * 4 + 1).padStart(3, "0")
+    : /^\d{3}-/.test(phraseId)
+      ? phraseId.slice(0, 3)
+      : (/^[a-z]{2}-(\d{3})-/.exec(phraseId)?.[1] ?? "999");
   if (!paywallDisabled(c.env) && !isFreeLesson(lesson)) {
     const gate = await subscriptionGate(c);
     if (gate) return gate;

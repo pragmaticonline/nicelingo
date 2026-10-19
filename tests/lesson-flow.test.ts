@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  blankAnswerIsName,
   blanked,
   buildQuestions,
   buildSpeakPlan,
@@ -106,6 +107,27 @@ describe("blanked", () => {
     expect(b.check("zorping")).toBe(true);
     expect(b.check("Zorping")).toBe(true);
     expect(b.check("quuxing")).toBe(false);
+  });
+
+  it("accepts answers without inverted punctuation, accents, or final punctuation", () => {
+    const b = blanked("¡Hola!");
+    expect(b.check("hola")).toBe(true);
+    expect(b.check("Hola")).toBe(true);
+    expect(b.check("¡Hola!")).toBe(true);
+    expect(b.check("adios")).toBe(false);
+    const q = blanked("¿Cómo te llamas?");
+    expect(q.check("llamas")).toBe(true);
+    expect(q.check("llamás")).toBe(true);
+  });
+});
+
+describe("blankAnswerIsName", () => {
+  it("flags name-final lines but not ordinary words or single-word lines", () => {
+    expect(blankAnswerIsName("Me llamo Ana.")).toBe(true);
+    expect(blankAnswerIsName("Sara López.")).toBe(true);
+    expect(blankAnswerIsName("Quiero agua, por favor.")).toBe(false);
+    expect(blankAnswerIsName("¡Hola!")).toBe(false);
+    expect(blankAnswerIsName("El hombre está comiendo.")).toBe(false);
   });
 });
 
