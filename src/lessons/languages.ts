@@ -29,8 +29,10 @@ export type LanguageInfo = {
 
 type LangCode = keyof (typeof lessons)[string] & keyof typeof NAMES;
 
-// No hidden languages right now; the set stays for future courses.
-const HIDDEN = new Set<string>([]);
+// Mandarin is hidden as a course for now (content paused); its data
+// stays in the curriculum so it can return by emptying this set. The
+// Chinese interface language is separate and unaffected.
+const HIDDEN = new Set<string>(["zh"]);
 
 const TOTAL = Object.keys(lessons).length;
 

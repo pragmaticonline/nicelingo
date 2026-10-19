@@ -76,6 +76,10 @@ export const PREVIEW_LANGS: PreviewLang[] = [
       { id: "sweetlady", name: "Sweet Lady", kind: "candidate", detail: "Feminine · MiniMax German" },
       { id: "playfulman", name: "Playful Man", kind: "candidate", detail: "Masculine · MiniMax German" },
       { id: "friendlyman", name: "Friendly Man", kind: "candidate", detail: "Masculine · MiniMax German" },
+      { id: "kore", name: "Kore", kind: "candidate", detail: "Feminine · Google Gemini" },
+      { id: "aoede", name: "Aoede", kind: "candidate", detail: "Feminine · Google Gemini" },
+      { id: "charon", name: "Charon", kind: "candidate", detail: "Masculine · Google Gemini" },
+      { id: "fenrir", name: "Fenrir", kind: "candidate", detail: "Masculine · Google Gemini" },
     ],
   },
   {
@@ -105,6 +109,10 @@ export const PREVIEW_LANGS: PreviewLang[] = [
       { id: "yujie", name: "Yujie", kind: "candidate", detail: "Feminine · MiniMax" },
       { id: "qingse", name: "Qingse", kind: "candidate", detail: "Masculine · MiniMax" },
       { id: "jingying", name: "Jingying", kind: "candidate", detail: "Masculine · MiniMax" },
+      { id: "kore", name: "Kore", kind: "candidate", detail: "Feminine · Google Gemini" },
+      { id: "aoede", name: "Aoede", kind: "candidate", detail: "Feminine · Google Gemini" },
+      { id: "charon", name: "Charon", kind: "candidate", detail: "Masculine · Google Gemini" },
+      { id: "fenrir", name: "Fenrir", kind: "candidate", detail: "Masculine · Google Gemini" },
     ],
   },
 ];
