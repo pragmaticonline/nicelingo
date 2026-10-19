@@ -2,11 +2,11 @@
 // Usage: CLOUDFLARE_API_TOKEN=... CLOUDFLARE_ACCOUNT_ID=... node scripts/generate-audio.mjs [en|es|de|fr|th] [NN]
 // Text comes from scripts/manifests/{lang}-{NN}.json (dumped from the
 // curriculum source), so generated clips always match what the app serves.
-// Providers: en/es use Workers AI Aura-2; fr uses Workers AI MeloTTS
-// (base64 WAV, converted to MP3 via ffmpeg); de uses third-party
-// MiniMax via AI Gateway (billed against gateway credits); th uses
-// third-party Gemini Flash TTS via AI Gateway (base64 WAV, converted to
-// MP3 via ffmpeg). Inworld TTS-2/Dennis was tried first but
+// Providers: en/es use Workers AI Aura-2; de/fr/th/zh use Google
+// Gemini Flash TTS via AI Gateway (base64 WAV, converted to MP3 via
+// ffmpeg; ~$0.0004 per short clip). Gemini replaced MiniMax (de, zh)
+// and MeloTTS (fr) in Oct 2026 on voice picks (Charon+Aoede; Thai
+// keeps Sulafat+Charon). Inworld TTS-2/Dennis was tried first but
 // mispronounces a German verb form (3/3 draws); MiniMax reads it
 // correctly (2/2). Thai reads scoreText (script), never the romanized
 // display text; Sulafat won the shootout 8/8 in-budget over Zephyr
@@ -22,10 +22,10 @@ import { TEXT_OVERRIDES } from "../content/tts-overrides.mjs";
 const VOICES = {
   en: { provider: "workers-aura", model: "@cf/deepgram/aura-2-en", speaker: "luna" },
   es: { provider: "workers-aura", model: "@cf/deepgram/aura-2-es", speaker: "aquila" },
-  fr: { provider: "workers-melotts", model: "@cf/myshell-ai/melotts", lang: "fr" },
-  zh: { provider: "gateway", model: "minimax/speech-2.8-turbo", speaker: "female-shaonv" },
+  fr: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
+  zh: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
   th: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Sulafat" },
-  de: { provider: "gateway", model: "minimax/speech-2.8-turbo", speaker: "English_expressive_narrator" },
+  de: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
 };
 
 // Per-phrase voice overrides for clips where the default speaker misreads
@@ -95,8 +95,12 @@ const VOICE_OVERRIDES = {
   "es-035-kitten-running": "alvaro",
   "es-035-kitten-playing": "alvaro",
   "es-035-bunny-playing": "alvaro",
-  // Default speaker misreads a clipped noun 2/2; tianmei scores 100.
-  "zh-044-chick-sleeping": "female-tianmei",
+  // Default speaker misreads a clipped noun 2/2 (MiniMax tianmei era);
+  // Aoede is the Gemini stand-in for this phrase.
+  "zh-044-chick-sleeping": "Aoede",
+  // Charon slurs "Schreibt" to "Schreit" across draws; Aoede is exact.
+  "de-218-woman-writing": "Aoede",
+  "de-218-girl-writing": "Aoede",
   // Default speaker reduces the noun onset 8/8 (~75); Charon keeps it (92).
   "th-007-dog-drinking": "Charon",
   // Default speaker draws 67-class takes 8/8; Zephyr keeps onset (92).
@@ -250,11 +254,15 @@ async function synthGemini(text, speaker) {
   return { wav };
 }
 
+// VOICE_FILTER limits generation to matching targets ("default" or an
+// alt voice id), so a rollout can add one voice without regenerating
+// the clips that already exist in R2.
+const voiceFilter = process.env.VOICE_FILTER ?? null;
 for (const phrase of manifest.phrases) {
   const targets = [
     { url: phrase.audioUrl, voice: null },
     ...Object.entries(phrase.audioUrls ?? {}).map(([v, url]) => ({ url, voice: v })),
-  ];
+  ].filter((t) => !voiceFilter || (t.voice ?? "default") === voiceFilter);
   for (const target of targets) {
   const dest = join(root, "public", target.url);
   if (existsSync(dest)) {
@@ -273,7 +281,11 @@ for (const phrase of manifest.phrases) {
     // reads all 8 L3 phrases cleanly. L3 (097-144) is the future level,
     // so it defaults to alvaro; explicit overrides still win either way.
     const speaker =
-      target.voice ??
+      (target.voice
+        ? voice.provider === "gateway-gemini"
+          ? target.voice[0].toUpperCase() + target.voice.slice(1)
+          : target.voice
+        : null) ??
       VOICE_OVERRIDES[phrase.id] ??
       (lang === "es" && lesson >= "097" && lesson <= "144" ? "alvaro" : voice.speaker);
     if (voice.provider === "workers-melotts" || voice.provider === "gateway-gemini") {
@@ -296,7 +308,7 @@ for (const phrase of manifest.phrases) {
         voice.provider === "gateway-gemini"
           ? await synthGemini(ttsText, speaker)
           : await synthMelotts(ttsText);
-      const tmp = join(tmpdir(), `nicelingo-${phrase.id}.wav`);
+      const tmp = join(tmpdir(), `nicelingo-${phrase.id}-${target.voice ?? "default"}-${process.pid}.wav`);
       writeFileSync(tmp, wav);
       execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", tmp, "-codec:a", "libmp3lame", "-q:a", "4", dest], { stdio: "pipe" });
       unlinkSync(tmp);
