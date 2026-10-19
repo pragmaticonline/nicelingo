@@ -38,7 +38,7 @@ export function fmt(template: string, vars: Record<string, string | number>): st
 const en = {
   signIn: "Sign in", account: "Account", students: "Students", developers: "Developers",
   freeAccount: "Free account", interfaceLanguage: "Interface language",
-  heroEyebrow: "See it. Hear it. Say it.", heroTitle: "What do you want to learn?",
+  heroEyebrow: "See it. Hear it. Say it.", betaNote: "Beta \u2014 we are still improving, so lessons may change.", heroTitle: "What do you want to learn?",
   heroLede: "Each lesson pairs eight photos with audio, then scores how you say them.",
   freeLine: "Unit 1 (lessons 1-4) is free. Lesson 5 and up is Premium.",
   hearIt: "Hear it", sayIt: "Say it", chooseLanguage: "Choose a language",
@@ -91,7 +91,7 @@ export type UiDict = typeof en;
 const es: UiDict = {
   signIn: "Iniciar sesión", account: "Cuenta", students: "Estudiantes", developers: "Desarrolladores",
   freeAccount: "Cuenta gratuita", interfaceLanguage: "Idioma de la interfaz",
-  heroEyebrow: "Míralo. Escúchalo. Dilo.", heroTitle: "¿Qué quieres aprender?",
+  heroEyebrow: "Míralo. Escúchalo. Dilo.", betaNote: "Beta: seguimos mejorando, las lecciones pueden cambiar.", heroTitle: "¿Qué quieres aprender?",
   heroLede: "Cada lección combina ocho fotos con audio y luego califica cómo las dices.",
   freeLine: "La Unidad 1 (lecciones 1-4) es gratuita. Desde la lección 5 es Premium.",
   hearIt: "Escuchar", sayIt: "Decirlo", chooseLanguage: "Elige un idioma",
@@ -142,7 +142,7 @@ const es: UiDict = {
 const de: UiDict = {
   signIn: "Anmelden", account: "Konto", students: "Schüler", developers: "Entwickler",
   freeAccount: "Kostenloses Konto", interfaceLanguage: "Oberflächensprache",
-  heroEyebrow: "Sehen. Hören. Sprechen.", heroTitle: "Was möchtest du lernen?",
+  heroEyebrow: "Sehen. Hören. Sprechen.", betaNote: "Beta \u2014 wir verbessern noch, Lektionen k\u00f6nnen sich \u00e4ndern.", heroTitle: "Was möchtest du lernen?",
   heroLede: "Jede Lektion verbindet acht Fotos mit Audio und bewertet dann deine Aussprache.",
   freeLine: "Einheit 1 (Lektionen 1-4) ist kostenlos. Ab Lektion 5 ist Premium nötig.",
   hearIt: "Anhören", sayIt: "Nachsprechen", chooseLanguage: "Wähle eine Sprache",
@@ -193,7 +193,7 @@ const de: UiDict = {
 const fr: UiDict = {
   signIn: "Se connecter", account: "Compte", students: "Élèves", developers: "Développeurs",
   freeAccount: "Compte gratuit", interfaceLanguage: "Langue de l'interface",
-  heroEyebrow: "Regardez. Écoutez. Répétez.", heroTitle: "Que voulez-vous apprendre ?",
+  heroEyebrow: "Regardez. Écoutez. Répétez.", betaNote: "B\u00eata \u2014 nous am\u00e9liorons encore, les le\u00e7ons peuvent changer.", heroTitle: "Que voulez-vous apprendre ?",
   heroLede: "Chaque leçon associe huit photos à de l'audio, puis note votre prononciation.",
   freeLine: "L'unité 1 (leçons 1-4) est gratuite. À partir de la leçon 5, c'est Premium.",
   hearIt: "Écouter", sayIt: "Répéter", chooseLanguage: "Choisissez une langue",
@@ -244,7 +244,7 @@ const fr: UiDict = {
 const th: UiDict = {
   signIn: "\u0e40\u0e02\u0e49\u0e32\u0e2a\u0e39\u0e48\u0e23\u0e30\u0e1a\u0e1a", account: "\u0e1a\u0e31\u0e0d\u0e0a\u0e35", students: "\u0e19\u0e31\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19", developers: "\u0e19\u0e31\u0e01\u0e1e\u0e31\u0e12\u0e19\u0e32",
   freeAccount: "\u0e1a\u0e31\u0e0d\u0e0a\u0e35\u0e1f\u0e23\u0e35", interfaceLanguage: "\u0e20\u0e32\u0e29\u0e32\u0e02\u0e2d\u0e07\u0e2b\u0e19\u0e49\u0e32\u0e08\u0e2d",
-  heroEyebrow: "\u0e14\u0e39 \u0e1f\u0e31\u0e07 \u0e41\u0e25\u0e49\u0e27\u0e1e\u0e39\u0e14\u0e15\u0e32\u0e21", heroTitle: "\u0e04\u0e38\u0e13\u0e2d\u0e22\u0e32\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19\u0e2d\u0e30\u0e44\u0e23?",
+  heroEyebrow: "\u0e14\u0e39 \u0e1f\u0e31\u0e07 \u0e41\u0e25\u0e49\u0e27\u0e1e\u0e39\u0e14\u0e15\u0e32\u0e21", heroTitle: "\u0e04\u0e38\u0e13\u0e2d\u0e22\u0e32\u0e01\u0e40\u0e23\u0e35\u0e22\u0e19\u0e2d\u0e30\u0e44\u0e23?", betaNote: "\u0E40\u0E1A\u0E15\u0E49\u0E32 \u2014 \u0E40\u0E23\u0E32\u0E22\u0E31\u0E07\u0E04\u0E07\u0E1B\u0E23\u0E31\u0E1A\u0E1B\u0E23\u0E38\u0E07\u0E2D\u0E22\u0E39\u0E48 \u0E1A\u0E17\u0E40\u0E23\u0E35\u0E22\u0E19\u0E2D\u0E32\u0E08\u0E40\u0E1B\u0E25\u0E35\u0E48\u0E22\u0E19\u0E41\u0E1B\u0E25\u0E07\u0E44\u0E14\u0E49",
   heroLede: "\u0e41\u0e15\u0e48\u0e25\u0e30\u0e1a\u0e17\u0e40\u0e23\u0e35\u0e22\u0e19\u0e08\u0e31\u0e1a\u0e04\u0e39\u0e48\u0e20\u0e32\u0e1e 8 \u0e20\u0e32\u0e1e\u0e01\u0e31\u0e1a\u0e40\u0e2a\u0e35\u0e22\u0e07 \u0e41\u0e25\u0e49\u0e27\u0e43\u0e2b\u0e49\u0e04\u0e30\u0e41\u0e19\u0e19\u0e01\u0e32\u0e23\u0e1e\u0e39\u0e14\u0e02\u0e2d\u0e07\u0e04\u0e38\u0e13",
   freeLine: "\u0e2b\u0e19\u0e48\u0e27\u0e22\u0e17\u0e35\u0e48 1 (\u0e1a\u0e17\u0e17\u0e35\u0e48 1-4) \u0e40\u0e23\u0e35\u0e22\u0e19\u0e1f\u0e23\u0e35 \u0e15\u0e31\u0e49\u0e07\u0e41\u0e15\u0e48\u0e1a\u0e17\u0e17\u0e35\u0e48 5 \u0e15\u0e49\u0e2d\u0e07\u0e43\u0e0a\u0e49 Premium",
   hearIt: "\u0e1f\u0e31\u0e07\u0e40\u0e2a\u0e35\u0e22\u0e07", sayIt: "\u0e25\u0e2d\u0e07\u0e1e\u0e39\u0e14", chooseLanguage: "\u0e40\u0e25\u0e37\u0e2d\u0e01\u0e20\u0e32\u0e29\u0e32",
@@ -295,7 +295,7 @@ const th: UiDict = {
 const zh: UiDict = {
   signIn: "\u767b\u5f55", account: "\u8d26\u6237", students: "\u5b66\u751f", developers: "\u5f00\u53d1\u8005",
   freeAccount: "\u514d\u8d39\u8d26\u6237", interfaceLanguage: "\u754c\u9762\u8bed\u8a00",
-  heroEyebrow: "\u770b\u4e00\u770b，\u542c\u4e00\u542c，\u8bf4\u4e00\u8bf4。", heroTitle: "\u4f60\u60f3\u5b66\u4ec0\u4e48？",
+  heroEyebrow: "\u770b\u4e00\u770b，\u542c\u4e00\u542c，\u8bf4\u4e00\u8bf4。", heroTitle: "\u4f60\u60f3\u5b66\u4ec0\u4e48？", betaNote: "\u6D4B\u8BD5\u7248 \u2014 \u6211\u4EEC\u4ECD\u5728\u6539\u8FDB\uFF0C\u8BFE\u7A0B\u53EF\u80FD\u4F1A\u6709\u53D8\u5316",
   heroLede: "\u6bcf\u8282\u8bfe\u5c06\u516b\u5f20\u56fe\u7247\u4e0e\u97f3\u9891\u914d\u5bf9，\u7136\u540e\u4e3a\u4f60\u7684\u53d1\u97f3\u6253\u5206。",
   freeLine: "\u7b2c\u4e00\u5355\u5143（\u7b2c1-4\u8bfe）\u514d\u8d39。\u7b2c5\u8bfe\u8d77\u9700\u8981 Premium。",
   hearIt: "\u542c\u4e00\u542c", sayIt: "\u8bf4\u4e00\u8bf4", chooseLanguage: "\u9009\u62e9\u8bed\u8a00",

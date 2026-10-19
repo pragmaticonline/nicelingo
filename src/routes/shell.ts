@@ -72,7 +72,7 @@ ${analyticsBeacon()}
 /** The parrot links home: "/" is the language picker, always, so a
  *  new course is one tap away with no cookie-clearing. */
 export function brandHtml(): string {
-  return `<a class="brand" href="/" aria-label="Nicelingo home — choose a language">${LOGO_SVG}<b>nicelingo</b></a>`;
+  return `<a class="brand" href="/" aria-label="Nicelingo home — choose a language">${LOGO_SVG}<b>nicelingo</b><span class="beta-chip">BETA</span></a>`;
 }
 
 const ACCOUNT_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-5.5 8-5.5s6.5 1.5 8 5.5"/></svg>`;
@@ -160,5 +160,5 @@ export function siteFooterHtml(
   opts: { registered?: boolean } = {},
 ): string {
   const d = t(uiLang);
-  return `<footer class="site-foot"><div class="foot-brand"><span class="foot-mark">${LOGO_SVG}</span><b>nicelingo</b><p class="foot-tag">${escapeHtml(d.heroEyebrow)}</p></div>${footerLinksHtml(d, opts.registered ?? false)}${appLangControl(uiLang, path)}<p class="foot-legal">© 2026 Nicelingo · Payments by Stripe</p></footer>`;
+  return `<footer class="site-foot"><div class="foot-brand"><span class="foot-mark">${LOGO_SVG}</span><b>nicelingo</b><span class="beta-chip">BETA</span><p class="foot-tag">${escapeHtml(d.heroEyebrow)}</p><p class="foot-beta">${escapeHtml(d.betaNote)}</p></div>${footerLinksHtml(d, opts.registered ?? false)}${appLangControl(uiLang, path)}<p class="foot-legal">© 2026 Nicelingo · Payments by Stripe</p></footer>`;
 }

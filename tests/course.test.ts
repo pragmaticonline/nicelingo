@@ -137,6 +137,9 @@ describe("GET /{lang} (course home)", () => {
     expect(menu).toContain("Interface language");
     // Interface picker also lives in the footer.
     expect(html).toContain("foot-lang");
+    // Beta is unmistakable: chip by the logo and a footer note.
+    expect(html).toContain('class="beta-chip">BETA');
+    expect(html).toContain("still improving");
   });
 });
 

@@ -233,6 +233,8 @@ button.linklike { background: none; border: none; padding: 0; color: var(--link)
 .foot-mark svg { width: 32px; height: 32px; }
 .foot-brand b { font-family: var(--head); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; color: var(--ink); }
 .foot-tag { flex: 1 1 100%; margin: 0; text-align: center; font-size: 14px; color: var(--muted); }
+.beta-chip { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; color: var(--ink); background: #FFE066; border: 2px solid var(--ink); border-radius: 999px; padding: 1px 7px; white-space: nowrap; }
+.foot-beta { flex: 1 1 100%; margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
 .foot-links { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; width: 100%; max-width: 26rem; }
 .foot-col { display: grid; gap: 4px; align-content: start; min-width: 0; }
 .foot-link {
