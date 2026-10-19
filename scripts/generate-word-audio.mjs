@@ -61,7 +61,7 @@ for (const f of readdirSync(join(root, "scripts/manifests")).filter((x) => x.end
       const cleanUrl = w.audioUrl.split("?")[0];
       if (byUrl.has(cleanUrl)) continue;
       let ttsText = w.chars ?? w.text;
-      if (lang === "th") {
+      if (lang === "th" && !w.chars) {
         const slug = cleanUrl.split("/").pop().replace(/\.mp3$/, "");
         ttsText = thScript.get(slug);
         if (!ttsText) throw new Error(`no Thai script for word slug ${slug} (${w.text})`);
