@@ -20,10 +20,10 @@ import { fileURLToPath } from "node:url";
 const VOICES = {
   en: { provider: "workers-aura", model: "@cf/deepgram/aura-2-en", speaker: "luna" },
   es: { provider: "workers-aura", model: "@cf/deepgram/aura-2-es", speaker: "aquila" },
-  fr: { provider: "workers-melotts", model: "@cf/myshell-ai/melotts", lang: "fr" },
-  zh: { provider: "gateway", model: "minimax/speech-2.8-turbo", speaker: "female-shaonv" },
+  fr: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
+  zh: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
   th: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Sulafat" },
-  de: { provider: "gateway", model: "minimax/speech-2.8-turbo", speaker: "English_expressive_narrator" },
+  de: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
 };
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");

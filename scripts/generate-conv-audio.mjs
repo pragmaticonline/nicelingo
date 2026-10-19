@@ -18,8 +18,31 @@ if (!token || !account) throw new Error("need CLOUDFLARE_API_TOKEN/ACCOUNT_ID");
 
 const lang = process.argv[2] ?? "en";
 const MODELS = { en: "@cf/deepgram/aura-2-en", es: "@cf/deepgram/aura-2-es" };
+// de/fr/th/zh conversation lines use Gemini via the AI Gateway
+// (voice names come from the manifest: Charon/Aoede, Sulafat/Charon).
+const GEMINI_LANGS = new Set(["de", "fr", "th", "zh"]);
 const model = MODELS[lang];
-if (!model) throw new Error(`no Aura model for ${lang}`);
+if (!model && !GEMINI_LANGS.has(lang)) throw new Error(`no TTS model for ${lang}`);
+
+async function synthGemini(text, speaker) {
+  let res = null;
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/ai/run`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "google/gemini-3.8-flash-tts", input: { text, voice: speaker } }),
+    });
+    if (res.ok || (res.status < 500 && res.status !== 429)) break;
+    if (attempt < 4) await new Promise((r) => setTimeout(r, 3000 * attempt));
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  const payload = data?.result?.audio ?? "";
+  const b64 = payload.includes(",") ? payload.split(",").pop() : payload;
+  const wav = Buffer.from(b64, "base64");
+  if (wav.length < 1000) throw new Error("bad gemini payload");
+  return wav;
+}
 
 const units = process.argv.slice(3).length
   ? process.argv.slice(3).map(Number)
@@ -44,8 +67,8 @@ for (const unit of units) {
     const dest = join(root, "public", line.audioUrl);
     if (existsSync(dest)) { skipped++; continue; }
     const speaker = scene.speakers[line.speaker].voice;
-    const raw = join(tmpdir(), `nl-conv-${line.id}.mp3`);
-    writeFileSync(raw, await synth(line.text, speaker));
+    const raw = join(tmpdir(), `nl-conv-${line.id}.${GEMINI_LANGS.has(lang) ? "wav" : "mp3"}`);
+    writeFileSync(raw, GEMINI_LANGS.has(lang) ? await synthGemini(line.scoreText ?? line.text, speaker) : await synth(line.text, speaker));
     mkdirSync(dirname(dest), { recursive: true });
     execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-i", raw, "-filter:a", "atempo=0.85", dest], { stdio: "pipe" });
     unlinkSync(raw);
