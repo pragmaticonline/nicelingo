@@ -15,7 +15,7 @@ if (!token || !account) throw new Error("need CLOUDFLARE_API_TOKEN/ACCOUNT_ID");
 
 const LANGS = {
   de: { text: "Der Mann isst.", voices: ["Kore", "Aoede", "Charon", "Fenrir"] },
-  zh: { text: "男人正在吃。", voices: ["Kore", "Aoede", "Charon", "Fenrir"] },
+  zh: { text: "\u7537\u4EBA\u6B63\u5728\u5403\u3002", voices: ["Kore", "Aoede", "Charon", "Fenrir"] },
 };
 
 async function synth(text, voice) {
