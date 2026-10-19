@@ -40,7 +40,7 @@ if (!token || !account) {
 function thaiScriptMap() {
   const path = join(root, "src/lessons/thai.ts");
   const src = readFileSync(path, "utf8");
-  const map = new Map([["gam-lang", "กำลัง"], ["liking", "ชอบ"], ["wanting", "อยาก"]]);
+  const map = new Map([["gam-lang", "\u0E01\u0E33\u0E25\u0E31\u0E07"], ["liking", "\u0E0A\u0E2D\u0E1A"], ["wanting", "\u0E2D\u0E22\u0E32\u0E01"]]);
   for (const m of src.matchAll(/^\s{2}(\w+): \{ script: "([^"]+)", latin:/gm)) {
     map.set(m[1], m[2]);
   }
