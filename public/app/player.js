@@ -1502,8 +1502,7 @@ async function bootCheckpoint(lang, level, unit) {
 // ---- Conversation lessons (Phase 2/2b) --------------------------------
 // Watch the scene, comprehension, then role-play: your lines first
 // spoken, then recalled (text hidden), then the other role. One
-// typed round is included; "Can't talk now" turns every spoken
-// round into a typed one for the session.
+// typed round is included.
 async function bootConversation(lang, unit) {
   player.screen(h("div", { class: "screen" }, h("p", { class: "sub" }, S.loading)));
   if (!(await api.me())) await api.anonymous();
@@ -1517,11 +1516,7 @@ async function bootConversation(lang, unit) {
     return;
   }
   const scene = data.scene;
-  let cantTalk = false;
   const startScreen = () => {
-    const talk = h("input", { type: "checkbox" });
-    talk.checked = cantTalk;
-    talk.addEventListener("change", () => { cantTalk = talk.checked; });
     const watch = h("button", { class: "btn ghost" }, "\u25B6 " + scene.title);
     watch.addEventListener("click", async () => {
       const hero = appImg({ class: "hero-img", src: scene.imageUrl, alt: "" });
@@ -1541,7 +1536,6 @@ async function bootConversation(lang, unit) {
     });
     const start = h("button", { class: "btn" }, S.checkpointStart);
     start.addEventListener("click", () => {
-      const spoken = (a) => (cantTalk ? "read-write" : a);
       // A write question whose blank is a proper name ("Me llamo
       // Ana.") becomes a picture choice instead.
       const writeSafe = (l, a) => (a === "read-write" && blankAnswerIsName(l.text) ? "image-phrase" : a);
@@ -1550,10 +1544,10 @@ async function bootConversation(lang, unit) {
       for (const q of scene.readCard?.questions ?? []) questions.push({ phrase: q.prompt, activity: "image-phrase" });
       const bLines = scene.lines.filter((l) => l.speaker === "B");
       const aLines = scene.lines.filter((l) => l.speaker === "A");
-      for (const l of bLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("speak-score")) });
-      if (bLines[0] && !cantTalk) questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
-      for (const l of bLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("recall")) });
-      for (const l of aLines) questions.push({ phrase: l, activity: writeSafe(l, spoken("recall")) });
+      for (const l of bLines) questions.push({ phrase: l, activity: "speak-score" });
+      if (bLines[0]) questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
+      for (const l of bLines) questions.push({ phrase: l, activity: "recall" });
+      for (const l of aLines) questions.push({ phrase: l, activity: "recall" });
       runSession({
         questions,
         pool: scene.lines,
@@ -1578,7 +1572,6 @@ async function bootConversation(lang, unit) {
     player.screen(h("div", { class: "screen" },
       appImg({ class: "hero-img", src: scene.imageUrl, alt: "" }),
       h("h1", {}, scene.title),
-      h("label", { class: "cant-talk" }, talk, " Can\u2019t talk now"),
       watch,
       start));
   };
