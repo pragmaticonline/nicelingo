@@ -93,11 +93,11 @@ const api = {
       queue.enqueue(activity, lessonId);
     }
   },
-  async score(phraseId, audioBase64, prevVerdict) {
+  async score(phraseId, audioBase64, prevVerdict, spokenAlt) {
     const r = await fetch("/api/score", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phraseId, audio: audioBase64, prevVerdict: prevVerdict ?? null }),
+      body: JSON.stringify({ phraseId, audio: audioBase64, prevVerdict: prevVerdict ?? null, ...(spokenAlt ? { spokenAlt } : {}) }),
     });
     if (!r.ok) throw new Error("score failed");
     return r.json();
@@ -1384,7 +1384,7 @@ function runSession({ questions, pool, title, onDone }) {
           reader.onerror = reject;
           reader.readAsDataURL(blob);
         });
-        const res = await api.score(q.phrase.id, base64, null);
+        const res = await api.score(q.phrase.id, base64, null, q.phrase.spokenAlt);
         const sc = typeof res.score === "number" ? res.score : res.pass ? 100 : 0;
         answer(q, sc >= 70, sc);
         status.textContent = sc >= 70 ? S.correct : S.notQuite;
@@ -1570,6 +1570,9 @@ async function bootConversation(lang, unit) {
       l.text = alt.text;
       l.audioUrl = alt.audioUrl;
       if (alt.words) l.words = alt.words;
+      // Scored by the alternative actually spoken (the server
+      // validates the id against the line's alternatives).
+      l.spokenAlt = alt.id;
     }
   }
   const startScreen = () => {
@@ -1717,6 +1720,19 @@ async function bootChallenge(lang, level, mode) {
     return;
   }
   const lines = data.scenes.flatMap((s) => s.lines);
+  // Varied replies (Phase 2b), mirroring conversation lessons: a line
+  // with alternatives swaps in a random equivalent phrasing for this
+  // run, so the challenge tests listening rather than recitation. The
+  // line id stays stable; scoring uses the spoken alternative.
+  for (const l of lines) {
+    if (l.alternatives?.length && Math.random() < 0.5) {
+      const alt = l.alternatives[Math.floor(Math.random() * l.alternatives.length)];
+      l.text = alt.text;
+      l.audioUrl = alt.audioUrl;
+      if (alt.words) l.words = alt.words;
+      l.spokenAlt = alt.id;
+    }
+  }
   const best = new Array(lines.length).fill(0);
   const tried = new Array(lines.length).fill(0);
   let idx = 0;
@@ -1778,7 +1794,7 @@ async function bootChallenge(lang, level, mode) {
           reader.onerror = reject;
           reader.readAsDataURL(blob);
         });
-        const res = await api.score(phrase.id, base64, null);
+        const res = await api.score(phrase.id, base64, null, phrase.spokenAlt);
         const sc = typeof res.score === "number" ? res.score : res.pass ? 100 : 0;
         tried[idx]++;
         best[idx] = Math.max(best[idx], sc);

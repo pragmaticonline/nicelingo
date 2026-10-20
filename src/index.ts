@@ -21,7 +21,7 @@ import { d1ProgressStore } from "./db/progress-store";
 import { d1AttemptStore } from "./db/attempt-store";
 import { buildCheckpointSet, checkpointAccess, unitLessons } from "./lib/checkpoint";
 import { buildReviewSet, lessonOfPhrase, phraseById } from "./lib/review";
-import { buildChallengeScenes, evaluateChallenge, levelLessons, levelUnits } from "./lib/challenge";
+import { buildChallengeScenes, evaluateChallenge, levelLessons, levelUnits, testOutMilestones } from "./lib/challenge";
 import { progressKey, unitStats } from "./lib/lesson-progress";
 import type { Milestone } from "./lib/attempts";
 import { d1PrefsStore } from "./db/prefs-store";
@@ -522,7 +522,7 @@ app.get("/api/lessons/:lang/:lesson", async (c) => {
 });
 
 app.post("/api/score", async (c) => {
-  const { phraseId, audio, prevVerdict } = await c.req.json();
+  const { phraseId, audio, prevVerdict, spokenAlt } = await c.req.json();
   const prev: Verdict | null =
     prevVerdict === "green" || prevVerdict === "yellow" || prevVerdict === "red"
       ? prevVerdict
@@ -538,6 +538,15 @@ app.post("/api/score", async (c) => {
   if (!phrase || typeof audio !== "string") {
     return c.json({ error: "unknown phrase" }, 404);
   }
+  // Varied replies (Phase 2b): when the player swapped in an
+  // equivalent phrasing, it sends that alternative's id; score what
+  // the learner actually said. The id must be a registered
+  // alternative of the base phrase, never client-chosen text.
+  const alt = typeof spokenAlt === "string"
+    ? ((phrase as { alternatives?: { id: string; text: string; scoreText?: string }[] }).alternatives ?? [])
+      .find((a) => a.id === spokenAlt) ?? null
+    : null;
+  const spoken = alt ?? phrase;
   // Scoring is gated like the manifest: open for Unit 1 (001-004; an
   // ungated endpoint would be a free transcription service), subscription
   // otherwise. Unparseable ids default to gated. Conversation lines
@@ -554,12 +563,12 @@ app.post("/api/score", async (c) => {
   }
   // EN phrase ids carry no prefix ("001-..."); others are "es-"/"de-"/"fr-".
   const language = phraseId.match(/^(es|de|fr|th|zh)-/)?.[1] ?? "en";
-  const reference = phrase.scoreText ?? phrase.text;
+  const reference = spoken.scoreText ?? spoken.text;
   // Clef judges the audio directly; Whisper transcript scoring below is
   // the fallback when Clef is unavailable or fails.
   const roman =
-    (language === "th" || language === "zh") && phrase.scoreText
-      ? phrase.text
+    (language === "th" || language === "zh") && spoken.scoreText
+      ? spoken.text
       : null;
   const judged = await judgePronunciation(
     c.env,
@@ -1267,8 +1276,8 @@ app.post("/api/level-complete", async (c) => {
 
   const now = new Date().toISOString();
   if (mode === "testout") {
-    // Mark every lesson in the level done, and record each unit
-    // checkpoint plus the level itself as passed via test out.
+    // Mark every lesson in the level done, plus each unit checkpoint
+    // and conversation as passed via test out (testOutMilestones).
     const progressStore = d1ProgressStore(c.env.DB);
     for (const n of levelLessons(level)) {
       const manifest = lessons[n]?.[lang as keyof typeof lessons[string]];
@@ -1276,10 +1285,8 @@ app.post("/api/level-complete", async (c) => {
         await progressStore.markComplete(userId, progressKey(lang, n), activity);
       }
     }
-    for (const unit of levelUnits(level)) {
-      await store.recordMilestone(userId, {
-        kind: "checkpoint", lang, level, unit, score: 10, passed: true, viaTestOut: true, completedAt: now,
-      });
+    for (const m of testOutMilestones(lang, level, now)) {
+      await store.recordMilestone(userId, m);
     }
   }
   await store.recordMilestone(userId, {

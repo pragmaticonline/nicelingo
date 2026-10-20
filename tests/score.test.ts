@@ -69,6 +69,32 @@ describe("POST /api/score", () => {
     expect(await res.json()).toMatchObject({ verdict: "green", pass: true });
   });
 
+  it("scores the spoken alternative when the player swapped one in", async () => {
+    // The learner heard and said "Xx zorp 1 bonus." (the line's
+    // alternative), so the transcript matches only the alt reference.
+    mockedTranscribe.mockResolvedValueOnce("Xx zorp 1 bonus.");
+    const res = await app.request("/api/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phraseId: "xx-conv-1-1", spokenAlt: "xx-conv-1-alt1", audio: "QUJD" }),
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ verdict: "green", pass: true });
+  });
+
+  it("ignores a spokenAlt that is not the line's alternative", async () => {
+    // Same alt transcript, but the id belongs to another unit: the
+    // server must fall back to the base reference, not client text.
+    mockedTranscribe.mockResolvedValueOnce("Xx zorp 1 bonus.");
+    const res = await app.request("/api/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ phraseId: "xx-conv-1-1", spokenAlt: "xx-conv-2-alt1", audio: "QUJD" }),
+    });
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ verdict: "red", pass: false });
+  });
+
   it("scores xx phrases against the xx manifest", async () => {
     mockedTranscribe.mockResolvedValueOnce("Xx xx-wug xx-zorping.");
     const res = await app.request("/api/score", {

@@ -139,6 +139,7 @@ export const lessons: Record<
 function fakeConversation(unit: number, lang: Lang): ConversationManifest {
   const lines = [0, 1, 2, 3].map((i) => {
     const text = `${lang === "xx" ? "Xx" : "Yy"} wug ${unit} line ${i + 1}.`;
+    const wug = lang === "xx" ? "Xx" : "Yy";
     return {
       id: `${lang}-conv-${unit}-${i + 1}`,
       text,
@@ -151,6 +152,18 @@ function fakeConversation(unit: number, lang: Lang): ConversationManifest {
         gloss: `meaning of ${w.toLowerCase()}`,
         audioUrl: `/static/lesson-001/audio/${lang}/words/conv-${w.toLowerCase()}.mp3`,
       })),
+      // One varied reply per scene, as the real scenes carry, so
+      // public tests cover alternative-aware scoring (spokenAlt).
+      ...(i === 0
+        ? {
+            alternatives: [{
+              id: `${lang}-conv-${unit}-alt1`,
+              text: `${wug} zorp ${unit} bonus.`,
+              audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-alt1.mp3`,
+              imageUrl: `/static/lesson-001/images/conv-u${unit}-l1.jpg`,
+            }],
+          }
+        : {}),
     };
   });
   return {

@@ -1,5 +1,38 @@
 import { describe, expect, it } from "vitest";
-import { buildChallengeScenes, evaluateChallenge, levelLessons, levelUnits } from "../src/lib/challenge";
+import { buildChallengeScenes, evaluateChallenge, levelLessons, levelUnits, pickChallengeLines, testOutMilestones } from "../src/lib/challenge";
+import type { ConversationManifest } from "../src/lessons/build";
+
+function fakeScene(unit: number, withAlt: boolean): ConversationManifest {
+  // One line per scene: the pick is deterministic whatever the rng.
+  const lines = [{
+    id: `xx-conv-${unit}-1`,
+    text: `Xx scene ${unit} line 1.`,
+    audioUrl: `/static/lesson-001/audio/xx/conv-u${unit}-l1.mp3`,
+    imageUrl: `/static/lesson-001/images/conv-u${unit}-l1.jpg`,
+    speaker: "A" as const,
+    ...(withAlt
+      ? {
+          alternatives: [{
+            id: `xx-conv-${unit}-alt1`,
+            text: `Xx scene ${unit} bonus.`,
+            audioUrl: `/static/lesson-001/audio/xx/conv-u${unit}-alt1.mp3`,
+            imageUrl: `/static/lesson-001/images/conv-u${unit}-l1.jpg`,
+          }],
+        }
+      : {}),
+  }];
+  return {
+    id: `xx-conv-${unit}`,
+    unit,
+    title: `Gibberish scene ${unit}`,
+    imageUrl: `/static/lesson-001/images/conv-u${unit}.jpg`,
+    speakers: { A: { voice: "male" }, B: { voice: "female" } },
+    lines,
+  };
+}
+
+/** Deterministic RNG for tests: always picks the first element. */
+const first: () => number = () => 0;
 
 describe("challenge scoring", () => {
   it("challenge passes at average 75 with no line below 40", () => {
@@ -38,6 +71,57 @@ describe("challenge scenes", () => {
   it("level lessons resolve through units", () => {
     expect(levelLessons(1)).toEqual(["001", "002", "003", "004"]);
     expect(levelLessons(99)).toEqual([]);
+  });
+});
+
+describe("challenge scenes from level conversations", () => {
+  it("picks one line per unit scene, in scene order with a fixed rng", () => {
+    const scenes = Array.from({ length: 12 }, (_, i) => fakeScene(i + 1, false));
+    const lines = pickChallengeLines(scenes, first);
+    expect(lines).toHaveLength(12);
+    // First element of each scene's pool, one per unit, no repeats.
+    expect(lines!.map((l) => l.id)).toEqual(
+      Array.from({ length: 12 }, (_, i) => `xx-conv-${i + 1}-1`),
+    );
+  });
+
+  it("carries alternatives along for varied replies", () => {
+    const scenes = Array.from({ length: 12 }, (_, i) => fakeScene(i + 1, true));
+    const lines = pickChallengeLines(scenes, first);
+    expect(lines).toHaveLength(12);
+    for (const [i, line] of lines!.entries()) {
+      expect(line.alternatives?.[0].id).toBe(`xx-conv-${i + 1}-alt1`);
+    }
+  });
+
+  it("refuses when any unit lacks a conversation scene", () => {
+    const scenes = Array.from({ length: 12 }, (_, i) => fakeScene(i + 1, false));
+    scenes[5] = undefined as never;
+    expect(pickChallengeLines(scenes, first)).toBeNull();
+    expect(pickChallengeLines([...scenes.slice(0, 5), { ...fakeScene(6, false), lines: [] }], first)).toBeNull();
+  });
+
+  it("builds 3 scenes of 4 from 12 unit scenes via the exported builder shape", () => {
+    const scenes = Array.from({ length: 12 }, (_, i) => fakeScene(i + 1, false));
+    const lines = pickChallengeLines(scenes, first)!;
+    const built = [
+      { lines: lines.slice(0, 4) },
+      { lines: lines.slice(4, 8) },
+      { lines: lines.slice(8, 12) },
+    ];
+    expect(built).toHaveLength(3);
+    expect(built.flatMap((s) => s.lines)).toHaveLength(12);
+  });
+});
+
+describe("test-out milestones", () => {
+  it("marks every unit checkpoint and conversation as tested out", () => {
+    // Public level 1 has one unit; the helper maps whatever the level holds.
+    const ms = testOutMilestones("xx", 1, "2026-10-20T00:00:00.000Z");
+    expect(ms).toHaveLength(2);
+    expect(ms[0]).toMatchObject({ kind: "checkpoint", lang: "xx", level: 1, unit: 1, viaTestOut: true, passed: true });
+    expect(ms[1]).toMatchObject({ kind: "conversation", lang: "xx", level: 1, unit: 1, viaTestOut: true, passed: true });
+    expect(ms.every((m) => m.completedAt === "2026-10-20T00:00:00.000Z")).toBe(true);
   });
 });
 
