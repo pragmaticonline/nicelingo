@@ -94,6 +94,18 @@ EN_CARDS = {
     10: ("PLATFORM 2", ["Train to the centre", "Leaves 10:00"]),
     11: ("WIFI", ["Password: hotel123", "Breakfast: 7:00"]),
     12: ("ROOM 25", ["Air conditioning", "Bathroom"]),
+    13: ("PHARMACY", ["Headache", "Twice a day"]),
+    14: ("HOTEL", ["Bill", "Total: 500"]),
+    15: ("PARK", ["Football", "10:00"]),
+    16: ("SCHOOL", ["Today: drawing", "A horse"]),
+    17: ("LOST PROPERTY", ["Station", "One bag"]),
+    18: ("SCHOOL", ["Ana wrote", "A story"]),
+    19: ("PARTY", ["Cake", "Juice"]),
+    20: ("BUS", ["Every 15 minutes", "To the centre"]),
+    21: ("BEACH", ["Swimming", "Every day"]),
+    22: ("KNEE", ["Sit down", "Water"]),
+    23: ("DOCTOR", ["Today: rest", "Rice"]),
+    24: ("CINEMA", ["Dogs", "5:00"]),
 }
 
 for unit, (title, rows) in CARDS.items():
