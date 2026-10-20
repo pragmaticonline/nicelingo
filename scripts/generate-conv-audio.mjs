@@ -63,7 +63,8 @@ async function synth(text, speaker) {
 let made = 0, skipped = 0;
 for (const unit of units) {
   const scene = JSON.parse(readFileSync(join(root, "scripts/manifests", `conv-${lang}-${unit}.json`), "utf8"));
-  for (const line of scene.lines.flatMap((l) => [l, ...(l.alternatives ?? []).map((a) => ({ ...a, speaker: l.speaker }))])) {
+  const readPhrases = (scene.readCard?.questions ?? []).flatMap((q) => [q.prompt, ...q.options]);
+  for (const line of [...scene.lines.flatMap((l) => [l, ...(l.alternatives ?? []).map((a) => ({ ...a, speaker: l.speaker }))]), ...readPhrases.map((p) => ({ ...p, speaker: "A" }))]) {
     const dest = join(root, "public", line.audioUrl);
     if (existsSync(dest)) { skipped++; continue; }
     const speaker = scene.speakers[line.speaker].voice;

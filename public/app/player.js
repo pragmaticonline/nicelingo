@@ -1242,6 +1242,50 @@ function runSession({ questions, pool, title, onDone }) {
     }
   }
 
+  // Read card (Phase 2b): a designed real-world text (menu, sign,
+  // wifi card) with a spoken prompt and picture/text choices.
+  function renderReadCard(q) {
+    let attempted = false;
+    let locked = false;
+    const msg = h("p", { class: "sub", style: "text-align:center;min-height:1.5em" }, "");
+    const onPick = (btn, opt) => {
+      if (locked) return;
+      const right = opt.id === q.answerId;
+      if (!attempted) {
+        attempted = true;
+        answer(q, right);
+      }
+      if (right) {
+        locked = true;
+        btn.classList.add("correct");
+        msg.textContent = S.correct;
+        setTimeout(next, 900);
+      } else {
+        btn.classList.add("wrong");
+        msg.textContent = S.notQuite;
+        setTimeout(() => btn.classList.remove("wrong"), 600);
+      }
+    };
+    const grid = h("div", { class: "grid" },
+      ...shuffleArr(q.options ?? []).map((opt) => {
+        const btn = h("button", { class: "pick" },
+          ...(opt.imageUrl ? [appImg({ src: opt.imageUrl, alt: "" })] : []),
+          h("span", { class: "opt-text" }, ...phraseNodes(opt)));
+        btn.addEventListener("click", () => onPick(btn, opt));
+        return btn;
+      }));
+    const speaker = h("button", { class: "speaker", "aria-label": "Play sound" }, "♪");
+    speaker.addEventListener("click", () => playAudio(pickAudioUrl(q.phrase), speaker));
+    setTimeout(() => playAudio(pickAudioUrl(q.phrase), speaker), 350);
+    frame(
+      appImg({ class: "hero-img", src: q.cardImage, alt: "" }),
+      h("p", { class: "phrase" }, ...phraseNodes(q.phrase)),
+      h("div", { class: "row-center" }, speaker),
+      grid,
+      msg,
+    );
+  }
+
   function renderWrite(q) {
     const b = blanked(q.phrase.text);
     const input = h("input", {
@@ -1383,6 +1427,7 @@ function runSession({ questions, pool, title, onDone }) {
     const q = questions[idx];
     if (q.activity === "speak-score" || q.activity === "recall") renderSpeak(q);
     else if (q.activity === "read-write") renderWrite(q);
+    else if (q.activity === "read-card") renderReadCard(q);
     else renderChoice(q);
   }
 
@@ -1552,10 +1597,10 @@ async function bootConversation(lang, unit) {
       const writeSafe = (l, a) => (a === "read-write" && blankAnswerIsName(l.text) ? "image-phrase" : a);
       const questions = [];
       for (const q of scene.comprehension ?? []) questions.push({ phrase: q.prompt, activity: "listen-match" });
-      for (const q of scene.readCard?.questions ?? []) questions.push({ phrase: q.prompt, activity: "image-phrase" });
       const bLines = scene.lines.filter((l) => l.speaker === "B");
       const aLines = scene.lines.filter((l) => l.speaker === "A");
       for (const l of bLines) questions.push({ phrase: l, activity: "speak-score" });
+      for (const q of scene.readCard?.questions ?? []) questions.push({ phrase: q.prompt, activity: "read-card", options: q.options, answerId: q.answerId, cardImage: scene.readCard.imageUrl });
       if (bLines[0]) questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
       for (const l of bLines) questions.push({ phrase: l, activity: "recall" });
       for (const l of aLines) questions.push({ phrase: l, activity: "recall" });
