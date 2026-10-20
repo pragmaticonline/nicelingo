@@ -190,6 +190,18 @@ DE_CARDS = {
     22: ("KNIE", ["Hinsetzen", "Wasser"]),
     23: ("ARZT", ["Heute ruhen", "Reis"]),
     24: ("KINO", ["Hunde", "17:00"]),
+    25: ("STRAND", ["Samstag", "10:00"]),
+    26: ("SOL", ["Morgen", "Tisch für 4"]),
+    27: ("PARTY", ["Freitag", "Kuchen"]),
+    28: ("KARTE", ["Berge", "Mit dem Auto"]),
+    29: ("SONNE", ["Morgen", "Park"]),
+    30: ("BUCHLADEN", ["Bücher", "Geschenke"]),
+    31: ("ARZT", ["Donnerstag", "7:00"]),
+    32: ("SCHULE", ["Musik", "Sport"]),
+    33: ("PICKNICK", ["Brot", "Saft"]),
+    34: ("MADRID", ["3:15", "6:00"]),
+    35: ("STRANDHAUS", ["Nah am Strand", "Bus zur Schule"]),
+    36: ("NEUJAHR", ["Schwimmen", "Bücher"]),
 }
 
 for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS)):
