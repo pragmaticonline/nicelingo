@@ -210,3 +210,19 @@ describe("words you know gallery", () => {
     expect(html).not.toContain("Words you know");
   });
 });
+
+describe("can-do list", () => {
+  it("ticks can-do statements for a passed level challenge only", () => {
+    const html = progressPage("xx", {
+      progress: unitOneDone(),
+      registered: true,
+      user: { email: "a@b.c", isAnonymous: false },
+      milestones: [
+        { kind: "levelChallenge", lang: "xx", level: 1, unit: null, score: 80, passed: true, completedAt: "2026-10-01", viaTestOut: false },
+      ],
+    });
+    expect(html).toContain("What you can do");
+    expect(html).toContain("✓ Introduce yourself");
+    expect(html).not.toContain("✓ Say what you did");
+  });
+});

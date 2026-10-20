@@ -268,6 +268,26 @@ export function wordPhotoUrl(gloss: string, nounSlug?: string): string | undefin
 /** Words-you-know gallery: every phrase from finished lessons, with
  *  its photo and tappable word chips that replay the word (slice or
  *  own recording) and announce its meaning. */
+
+const CAN_DO: Record<number, string[]> = {
+  1: ["Introduce yourself and say your name", "Order and buy things; ask how much", "Ask the way and say you don't understand", "Get from the airport to a hotel and fix a problem"],
+  2: ["Say what you did and what happened", "Report a lost item", "Describe a past event"],
+  3: ["Make, change, and decline plans", "Book a table or an appointment"],
+  4: ["Say what you like and want, and why", "Describe people and things", "Describe a scene"],
+  5: ["Give advice and opinions with a reason", "Handle a complaint", "Ask and answer interview questions"],
+};
+
+function canDoHtml(lang: string, milestones: import("../lib/attempts").Milestone[] | undefined, ui: UiLang): string {
+  const d = t(ui);
+  const passedLevels = new Set((milestones ?? []).filter((m) => m.kind === "levelChallenge" && m.lang === lang && m.passed).map((m) => m.level));
+  const blocks = [1, 2, 3, 4, 5].map((level) => {
+    const done = passedLevels.has(level);
+    const items = CAN_DO[level].map((c) => `<li class="${done ? "done" : ""}">${done ? "✓ " : ""}${escapeHtml(done ? c : c)}</li>`).join("");
+    return `<div class="cando-level"><h3>${escapeHtml(fmt(d.levelChallenge, { n: level }))}</h3><ul class="cando-list">${items}</ul></div>`;
+  }).join("");
+  return `<section class="cando-section" aria-label="What you can do"><h2>What you can do</h2>${blocks}</section>`;
+}
+
 function wordsGalleryHtml(lang: string, progress: Record<string, string[]>, ui: UiLang, stats?: import("../lib/attempts").PhraseStats[]): string {
   const stepByPhrase = new Map((stats ?? []).map((x) => [x.phraseId, x.reviewStep]));
   const d = t(ui);
@@ -414,6 +434,7 @@ ${(() => {
         .join("")}</div></section>`
     : "";
 })()}
+${canDoHtml(lang, opts.milestones, ui)}
 ${wordsGalleryHtml(lang, progress, ui, opts.phraseStats)}
 </main>
 ${siteFooterHtml(ui, `/${lang}`, { registered: opts.registered })}`;

@@ -489,3 +489,8 @@ a.streak-chip { text-decoration: none; }
 .conv-card.done{border-color:#2E9E5B}
 .bubble{max-width:80%;padding:10px 14px;border-radius:16px;margin:8px 0;background:#EFF5FF}
 .bubble-b{margin-left:auto;background:#E7F6EC}
+.cando-section { margin-top: 1.5rem; }
+.cando-section h2 { font-family: var(--font-head); }
+.cando-level h3 { margin: .9rem 0 .3rem; font-size: 1rem; }
+.cando-list { margin: 0; padding-left: 1.2rem; color: #4C5873; }
+.cando-list li.done { color: #0E1B3D; font-weight: 600; }
