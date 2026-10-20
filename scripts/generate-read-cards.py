@@ -59,6 +59,18 @@ CARDS = {
     46: ("CINE", ["Perros", "Espacio"]),
     47: ("CLUB", ["Martes", "Jueves"]),
     48: ("HOTEL", ["Piscina", "Barato"]),
+    49: ("NOTA", ["Dormir mejor", "Sin libro"]),
+    50: ("DINERO", ["Un caballo", "Una granja"]),
+    51: ("GATO", ["Este fin de semana", "La cocina"]),
+    52: ("ZAPATOS", ["Rotos", "¿Dinero?"]),
+    53: ("HABITACIÓN", ["Mañana", "10:00"]),
+    54: ("CINE", ["Sábado", "Perdón"]),
+    55: ("COLEGIO", ["9 años", "Nadar"]),
+    56: ("ENCUESTA", ["Todos los días", "Pescado"]),
+    57: ("BANCO", ["Dólares", "Pasaporte"]),
+    58: ("CINE", ["Hoy", "¡Corre!"]),
+    59: ("MUSEO", ["Recto", "Derecha"]),
+    60: ("ADIÓS", ["Otra ciudad", "El mes que viene"]),
 }
 
 def font(size, bold=False):
