@@ -1516,6 +1516,17 @@ async function bootConversation(lang, unit) {
     return;
   }
   const scene = data.scene;
+  // Varied replies (Phase 2b): a line with alternatives swaps in a
+  // random equivalent phrasing for this session, so recall rounds
+  // test listening rather than recitation. Line id stays stable.
+  for (const l of scene.lines) {
+    if (l.alternatives?.length && Math.random() < 0.5) {
+      const alt = l.alternatives[Math.floor(Math.random() * l.alternatives.length)];
+      l.text = alt.text;
+      l.audioUrl = alt.audioUrl;
+      if (alt.words) l.words = alt.words;
+    }
+  }
   const startScreen = () => {
     const watch = h("button", { class: "btn ghost" }, "\u25B6 " + scene.title);
     watch.addEventListener("click", async () => {

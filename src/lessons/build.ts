@@ -81,7 +81,7 @@ export type ConversationManifest = {
   imageUrl: string;
   speakers: Record<"A" | "B", { voice: string; avatarUrl?: string }>;
   /** Lines in scene order; each is a normal phrase plus speaker. */
-  lines: (LessonPhrase & { speaker: "A" | "B"; alternatives?: string[] })[];
+  lines: (LessonPhrase & { speaker: "A" | "B"; alternatives?: LessonPhrase[] })[];
   comprehension?: { prompt: LessonPhrase; options: LessonPhrase[]; answerId: string }[];
   readCard?: { imageUrl: string; questions: { prompt: LessonPhrase; options: LessonPhrase[]; answerId: string }[] };
 };
