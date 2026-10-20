@@ -165,7 +165,17 @@ for unit, (title, rows) in CARDS.items():
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out, quality=90)
     print(out)
-for unit, (title, rows) in EN_CARDS.items():
+DE_CARDS = {
+    1: ("SPIELPLATZ", ["Täglich geöffnet", "9:00 – 18:00"]),
+    2: ("NOTIZ", ["Brot und Wasser", "Milch für Anna"]),
+    3: ("BUS 10", ["Zum Zentrum", "Alle 20 Minuten"]),
+    4: ("MENÜ", ["Wasser .......... 2", "Brot .......... 1", "Kaffee .......... 3"]),
+    5: ("MARKT", ["Äpfel", "2 Euro pro Kilo"]),
+    6: ("BAHNHOF", ["Züge zum Zentrum", "Gleis 2"]),
+}
+
+for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS)):
+  for unit, (title, rows) in table.items():
     img = Image.new("RGB", (800, 560), "#FDFDF8")
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([16, 16, 784, 544], radius=28, outline="#0E1B3D", width=6)
@@ -182,7 +192,7 @@ for unit, (title, rows) in EN_CARDS.items():
         d.text(((800 - rw) / 2, y), row, font=rf, fill="#0E1B3D")
         y += 84
     prefix = f"{(unit - 1) * 4 + 1:03d}"
-    out = ROOT / f"public/static/lesson-{prefix}/images/read-u{unit}-en.jpg"
+    out = ROOT / f"public/static/lesson-{prefix}/images/read-u{unit}{suffix}.jpg"
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out, quality=90)
     print(out)
