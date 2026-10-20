@@ -372,7 +372,7 @@ export function coursePage(lang: string, opts: CourseOpts): string {
   // Continue card, hidden entirely when nothing is due. Absorbs
   // the old Practise-my-mistakes button (weak phrases are due).
   const reviewStrip = (opts.reviewDue ?? 0) > 0
-    ? `<section class="review-strip"><span class="review-strip-text">\u{1F501} ${escapeHtml(fmt(d.dailyReview, { n: opts.reviewDue ?? 0 }))}</span><a class="btn review-start" href="/${lang}/review">${escapeHtml(d.startReview)}</a></section>`
+    ? `<section class="review-strip"><span class="review-strip-text">\u{1F501} ${escapeHtml(fmt((opts.reviewDue ?? 0) === 1 ? d.dailyReviewOne : d.dailyReview, { n: opts.reviewDue ?? 0 }))}</span><a class="btn review-start" href="/${lang}/review">${escapeHtml(d.startReview)}</a></section>`
     : "";
   const cpPassedUnits = new Set(
     (opts.milestones ?? [])

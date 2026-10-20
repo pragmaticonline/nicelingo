@@ -403,7 +403,7 @@ ${(() => {
   if (!opts.phraseStats?.length) return "";
   const daily = buildDailyReview({ lang, stats: opts.phraseStats, subscribed: opts.subscribed ?? false, today: localDayString() });
   return daily.dueCount > 0
-    ? `<p class="due-line"><a class="linklike" href="/${lang}/review">${escapeHtml(fmt(d.dueForReview, { n: daily.dueCount }))}</a></p>`
+    ? `<p class="due-line"><a class="linklike" href="/${lang}/review">${escapeHtml(fmt(daily.dueCount === 1 ? d.dueForReviewOne : d.dueForReview, { n: daily.dueCount }))}</a></p>`
     : "";
 })()}
 ${streakNoteHtml(opts.user, streak, ui)}
