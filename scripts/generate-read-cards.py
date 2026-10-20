@@ -81,6 +81,15 @@ def font(size, bold=False):
             return ImageFont.truetype(str(p), size)
     return ImageFont.truetype(name, size)
 
+EN_CARDS = {
+    1: ("PLAYGROUND", ["Open every day", "9:00 - 6:00"]),
+    2: ("NOTE", ["Bread and water", "Milk is for Ana"]),
+    3: ("BUS 10", ["To the centre", "Every 20 minutes"]),
+    4: ("MENU", ["Water .......... 2", "Bread .......... 1", "Coffee .......... 3"]),
+    5: ("MARKET", ["Apples", "2 euros a kilo"]),
+    6: ("STATION", ["Trains to the centre", "Platform 2"]),
+}
+
 for unit, (title, rows) in CARDS.items():
     img = Image.new("RGB", (800, 560), "#FDFDF8")
     d = ImageDraw.Draw(img)
@@ -99,6 +108,27 @@ for unit, (title, rows) in CARDS.items():
         y += 84
     prefix = f"{(unit - 1) * 4 + 1:03d}"
     out = ROOT / f"public/static/lesson-{prefix}/images/read-u{unit}.jpg"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out, quality=90)
+    print(out)
+for unit, (title, rows) in EN_CARDS.items():
+    img = Image.new("RGB", (800, 560), "#FDFDF8")
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([16, 16, 784, 544], radius=28, outline="#0E1B3D", width=6)
+    d.rectangle([16, 16, 784, 130], fill="#1247B8")
+    d.rounded_rectangle([16, 16, 784, 130], radius=28, fill="#1247B8")
+    d.rectangle([16, 90, 784, 130], fill="#1247B8")
+    tf = font(52, bold=True)
+    tw = d.textlength(title, font=tf)
+    d.text(((800 - tw) / 2, 38), title, font=tf, fill="white")
+    y = 180
+    for row in rows:
+        rf = font(44)
+        rw = d.textlength(row, font=rf)
+        d.text(((800 - rw) / 2, y), row, font=rf, fill="#0E1B3D")
+        y += 84
+    prefix = f"{(unit - 1) * 4 + 1:03d}"
+    out = ROOT / f"public/static/lesson-{prefix}/images/read-u{unit}-en.jpg"
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out, quality=90)
     print(out)

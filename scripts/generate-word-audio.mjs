@@ -52,24 +52,37 @@ const thScript = thaiScriptMap();
 const wanted = new Map(); // lang -> Map(audioUrl -> ttsText)
 for (const f of readdirSync(join(root, "scripts/manifests")).filter((x) => x.endsWith(".json"))) {
   const m = JSON.parse(readFileSync(join(root, "scripts/manifests", f), "utf8"));
-  const lang = m.id.startsWith("lesson") ? "en" : m.id.split("-")[0];
-  if (!VOICES[lang]) continue;
-  const byUrl = wanted.get(lang) ?? new Map();
-  for (const p of m.phrases ?? m.lines ?? []) {
+  const idLang = m.id.startsWith("lesson") ? "en" : m.id.split("-")[0];
+  const phraseList = (m.phrases?.length ? m.phrases : m.lines) ?? [];
+  // Conversation extras nest words one level deeper: line alternatives
+  // and read-card prompts/options. Flatten them into the phrase list.
+  for (const p of phraseList) {
+    for (const a of p.alternatives ?? []) phraseList.push(a);
+  }
+  for (const q of m.readCard?.questions ?? []) {
+    if (q.prompt) phraseList.push(q.prompt);
+    for (const o of q.options ?? []) phraseList.push(o);
+  }
+  for (const p of phraseList) {
     for (const w of p.words ?? []) {
-      if (!w.audioUrl || byUrl.has(w.audioUrl)) continue;
+      if (!w.audioUrl) continue;
       const cleanUrl = w.audioUrl.split("?")[0];
+      // Conversation manifests (conv-en-1) carry no language in the id;
+      // derive it from the clip path (/audio/es/..., /audio/en/...).
+      const urlLang = (cleanUrl.match(/\/audio\/(es|en|de|fr|th|zh)\//) ?? [])[1] ?? idLang;
+      if (!VOICES[urlLang]) continue;
+      const byUrl = wanted.get(urlLang) ?? new Map();
       if (byUrl.has(cleanUrl)) continue;
       let ttsText = w.chars ?? w.text;
-      if (lang === "th" && !w.chars) {
+      if (urlLang === "th" && !w.chars) {
         const slug = cleanUrl.split("/").pop().replace(/\.mp3$/, "");
         ttsText = thScript.get(slug);
         if (!ttsText) throw new Error(`no Thai script for word slug ${slug} (${w.text})`);
       }
       byUrl.set(cleanUrl, ttsText);
+      wanted.set(urlLang, byUrl);
     }
   }
-  wanted.set(lang, byUrl);
 }
 
 async function synth(voice, text) {
