@@ -235,6 +235,12 @@ FR_CARDS = {
     4: ("MENU", ["Eau .......... 2", "Pain .......... 1", "Café .......... 3"]),
     5: ("MARCHÉ", ["Pommes", "2 euros le kilo"]),
     6: ("GARE", ["Trains pour le centre", "Quai 2"]),
+    7: ("TAXI", ["Aéroport", "30 minutes"]),
+    8: ("EMBARQUEMENT", ["Porte 12", "9h30"]),
+    9: ("VISA", ["Vacances", "1 semaine"]),
+    10: ("QUAI 2", ["Train pour le centre", "Départ 10h00"]),
+    11: ("WIFI", ["Mot de passe : hotel123", "Petit-déjeuner : 7h00"]),
+    12: ("CHAMBRE 25", ["Climatisation", "Salle de bain"]),
 }
 
 for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS), ("-fr", FR_CARDS)):
