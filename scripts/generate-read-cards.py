@@ -88,6 +88,12 @@ EN_CARDS = {
     4: ("MENU", ["Water .......... 2", "Bread .......... 1", "Coffee .......... 3"]),
     5: ("MARKET", ["Apples", "2 euros a kilo"]),
     6: ("STATION", ["Trains to the centre", "Platform 2"]),
+    7: ("TAXI", ["To the airport", "30 minutes"]),
+    8: ("BOARDING", ["Gate 12", "9:30"]),
+    9: ("VISA", ["Holidays", "1 week"]),
+    10: ("PLATFORM 2", ["Train to the centre", "Leaves 10:00"]),
+    11: ("WIFI", ["Password: hotel123", "Breakfast: 7:00"]),
+    12: ("ROOM 25", ["Air conditioning", "Bathroom"]),
 }
 
 for unit, (title, rows) in CARDS.items():
