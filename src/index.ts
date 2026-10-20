@@ -1166,6 +1166,7 @@ app.post("/api/conversation/complete", async (c) => {
     viaTestOut: false,
     completedAt: new Date().toISOString(),
   });
+  recordEvent(c.env, { name: "conversation_completed", lang, lesson: String(unit), ...requestContext(c) });
   return c.json({ passed: true });
 });
 

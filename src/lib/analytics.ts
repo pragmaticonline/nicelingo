@@ -27,6 +27,7 @@ export const ANALYTICS_EVENTS = [
   "language_selected",
   "lesson_started",
   "activity_completed",
+  "conversation_completed",
   "score_attempt",
   "checkout_started",
   "subscription_changed",

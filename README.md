@@ -303,14 +303,32 @@ on the course home, strength dots in the Words-you-know gallery,
 and level renaming (First Words A1 / What Happened A1 / Making
 Plans A1-A2 / Likes & Stories A2 / Getting Things Done A2).
 
-Phase 2/2b shipped for Spanish Level 1 (decision 8 rollout):
-Phase 2c has begun: lesson 049 (Level 2, past tense) now teaches objects — "The man ate an apple / El hombre comió una manzana" — with new photos, re-recorded audio in en/es/de/fr, and complement word clips; the complements framework (COMPLIMENTS table in the content repo) rolls out lesson by lesson. Review copy now reads "phrases practised" instead of "phrases fixed". Spanish Level 1 conversations now cover all 12 units (units 7-12 are the trip: taxi, airport, passport control, train, hotel, room problem), with Selena as the female conversation voice (decision 16), Clef per-word feedback on speak verdicts (Phase 3a), and context tips on formal-you lines (Phase 3d). conversation lessons (`bootConversation`, `/api/conversation/:lang/:unit`,
-course banner after each unit's photo lessons, Unit 1 free) with
-watch-the-scene, comprehension, spoken and typed rounds, recall in
-both roles, and a "Can't talk now" typed mode. Six Spanish scenes
-(units 1-6) with two voices and QA'd audio plus scene images are in
-R2. Remaining: the other 54 scenes and languages, per-line images,
-read cards and varied replies, Phase 2c complements (1,536 images,
-~9,200 clips), Phase 2d Thai/Mandarin levels, and Phase 3 (tips,
-Selena voice swap, word feedback after the Clef test, script track
-pending confirmation).
+Phase 2/2b shipped: conversation lessons (`bootConversation`,
+`/api/conversation/:lang/:unit`, course banner after each unit's
+photo lessons, Unit 1 free) with watch-the-scene, comprehension,
+spoken and typed rounds, and recall in both roles. All 60 scenes
+exist in all six languages (Spanish, English, German, French,
+Thai, Mandarin), each with two voices, per-line images, and QA'd
+audio in R2. Spanish Level 1 also has varied replies (one
+alternative phrasing per scene, swapped in per session) and a
+designed read card per scene (menu, signs, wifi card).
+
+Phase 2c shipped: every applicable Level 2-5 photo lesson in
+en/es/de/fr teaches an object or place ("The man ate an apple /
+El hombre comió una manzana") with new photos, re-recorded audio,
+and complement word clips (feeling-verb and reading/writing
+lessons keep the plain frame, per spec).
+
+Phase 2d shipped: Thai and Mandarin now cover all 240 photo
+lessons (past/future/past-continuous/conditional/question frames
+with complements, vocal-only) plus their 60 conversations, so all
+six languages are complete courses.
+
+Phase 3: Clef per-word feedback on speak verdicts (3a) and
+context tips on formal/informal-you and polite-particle lines
+(3d) shipped; the progress page lists each level's can-do
+statements, ticked when its level challenge is passed, and
+conversation completions are recorded as an analytics event.
+Remaining: varied replies and read cards beyond Spanish Level 1,
+and the Thai script track (pending owner confirmation, since it
+reverses the vocal-only decision).
