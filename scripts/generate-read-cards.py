@@ -47,6 +47,18 @@ CARDS = {
     34: ("TREN A GUADALAJARA", ["3:15", "6:00"]),
     35: ("PLAYA", ["Nueva casa", "Cerca de la playa"]),
     36: ("AÑO NUEVO", ["Nadar", "Leer más"]),
+    37: ("ACCIDENTE", ["Un ciclista", "Coche rojo"]),
+    38: ("GATO", ["Pequeño", "Negro"]),
+    39: ("CONCIERTO", ["Anoche", "Rock"]),
+    40: ("TELÉFONO", ["8:00", "Cena"]),
+    41: ("JARDÍN", ["Leo", "Un cachorro"]),
+    42: ("SUEÑO", ["Un caballo", "El mar"]),
+    43: ("CAMISA", ["Azul", "Más barata"]),
+    44: ("MENÚ", ["Pescado", "Sin nueces"]),
+    45: ("DIBUJO", ["Tom", "Fútbol"]),
+    46: ("CINE", ["Perros", "Espacio"]),
+    47: ("CLUB", ["Martes", "Jueves"]),
+    48: ("HOTEL", ["Piscina", "Barato"]),
 }
 
 def font(size, bold=False):
