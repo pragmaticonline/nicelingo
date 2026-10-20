@@ -214,7 +214,7 @@ for (const phrase of manifest.phrases) {
     console.error(`${combo}: no b64_json in response`);
     process.exit(1);
   }
-  const tmp = join(tmpdir(), `nicelingo-${combo}.img`);
+  const tmp = join(tmpdir(), `nicelingo-${combo}-${process.pid}.img`);
   writeFileSync(tmp, Buffer.from(b64, "base64"));
   execFileSync("ffmpeg", [
     "-y",

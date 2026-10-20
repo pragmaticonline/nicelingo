@@ -16,7 +16,7 @@ const outPath =
   process.argv[3] ?? "/root/nicelingo-content/src/lessons/word-timings.ts";
 
 const jobs = [];
-for (const f of readdirSync("scripts/manifests").filter((x) => x.endsWith(".json"))) {
+for (const f of readdirSync("scripts/manifests").filter((x) => x.endsWith(".json") && !x.startsWith("conv-"))) {
   const m = JSON.parse(readFileSync(join("scripts/manifests", f), "utf8"));
   for (const p of m.phrases) {
     jobs.push({ id: p.id, file: join(staticDir, p.audioUrl.replace(/^\/static\//, "")) });
