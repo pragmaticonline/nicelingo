@@ -228,7 +228,16 @@ DE_CARDS = {
     60: ("STADT", ["Nächsten Monat", "Jede Woche"]),
 }
 
-for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS)):
+FR_CARDS = {
+    1: ("PLAINE DE JEUX", ["Ouvert tous les jours", "9h00 – 18h00"]),
+    2: ("NOTE", ["Pain et eau", "Lait pour Anna"]),
+    3: ("BUS 10", ["Centre-ville", "Toutes les 20 minutes"]),
+    4: ("MENU", ["Eau .......... 2", "Pain .......... 1", "Café .......... 3"]),
+    5: ("MARCHÉ", ["Pommes", "2 euros le kilo"]),
+    6: ("GARE", ["Trains pour le centre", "Quai 2"]),
+}
+
+for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS), ("-fr", FR_CARDS)):
   for unit, (title, rows) in table.items():
     img = Image.new("RGB", (800, 560), "#FDFDF8")
     d = ImageDraw.Draw(img)
