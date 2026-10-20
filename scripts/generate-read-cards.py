@@ -23,6 +23,18 @@ CARDS = {
     10: ("ANDÉN 2", ["Tren al centro", "Sale 10:00"]),
     11: ("WIFI", ["Clave: hotel123", "Desayuno: 7:00"]),
     12: ("HABITACIÓN 25", ["Aire acondicionado", "Baño"]),
+    13: ("FARMACIA", ["Dolor de cabeza", "2 veces al día"]),
+    14: ("HOTEL", ["Cuenta", "Total: 500 pesos"]),
+    15: ("PARQUE", ["Fútbol", "10:00"]),
+    16: ("COLEGIO", ["Hoy: dibujo", "Un caballo"]),
+    17: ("OBJETOS PERDIDOS", ["Estación", "Una bolsa"]),
+    18: ("COLEGIO", ["Ana escribió", "Un cuento"]),
+    19: ("FIESTA", ["Sábado", "5:00"]),
+    20: ("AUTOBÚS", ["Cada 15 minutos", "Al centro"]),
+    21: ("PLAYA", ["Nadar", "Todos los días"]),
+    22: ("DOCTOR", ["Hoy: descanso", "Arroz"]),
+    23: ("CINE", ["Sábado", "7:00"]),
+    24: ("CINE", ["Perros", "5:00"]),
 }
 
 def font(size, bold=False):
