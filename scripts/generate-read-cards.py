@@ -178,6 +178,18 @@ DE_CARDS = {
     10: ("GLEIS 2", ["Zug zum Zentrum", "Abfahrt 10:00"]),
     11: ("WLAN", ["Passwort: hotel123", "Frühstück: 7:00"]),
     12: ("ZIMMER 25", ["Klimaanlage", "Bad"]),
+    13: ("APOTHEKE", ["Kopfschmerzen", "2-mal täglich"]),
+    14: ("HOTEL", ["Rechnung", "Total 500"]),
+    15: ("PARK", ["Fußball", "10:00"]),
+    16: ("SCHULE", ["Heute: Malen", "Ein Pferd"]),
+    17: ("FUNDSACHEN", ["Bahnhof", "Eine Tasche"]),
+    18: ("SCHULE", ["Geschichte", "Mittagessen"]),
+    19: ("PARTY", ["Kuchen", "Saft"]),
+    20: ("BUS", ["Alle 15 Minuten", "Zum Zentrum"]),
+    21: ("STRAND", ["Schwimmen", "Jeden Tag"]),
+    22: ("KNIE", ["Hinsetzen", "Wasser"]),
+    23: ("ARZT", ["Heute ruhen", "Reis"]),
+    24: ("KINO", ["Hunde", "17:00"]),
 }
 
 for suffix, table in (("-en", EN_CARDS), ("-de", DE_CARDS)):
