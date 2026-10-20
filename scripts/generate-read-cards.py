@@ -35,6 +35,18 @@ CARDS = {
     22: ("DOCTOR", ["Hoy: descanso", "Arroz"]),
     23: ("CINE", ["Sábado", "7:00"]),
     24: ("CINE", ["Perros", "5:00"]),
+    25: ("ESTACIÓN", ["Sábado", "10:00"]),
+    26: ("RESTAURANTE", ["Mesa para 4", "9:00"]),
+    27: ("FIESTA", ["Viernes", "Mi cumpleaños"]),
+    28: ("MAPA", ["Este verano", "La montaña"]),
+    29: ("PARQUE", ["Pelota", "Bici"]),
+    30: ("LIBRERÍA", ["Un regalo", "Este libro"]),
+    31: ("CENTRO DE SALUD", ["Mañana", "5 de la tarde"]),
+    32: ("COLEGIO", ["Mañana", "Música y deporte"]),
+    33: ("PÍCNIC", ["Pan, queso y fruta", "Sándwiches"]),
+    34: ("TREN A GUADALAJARA", ["3:15", "6:00"]),
+    35: ("PLAYA", ["Nueva casa", "Cerca de la playa"]),
+    36: ("AÑO NUEVO", ["Nadar", "Leer más"]),
 }
 
 def font(size, bold=False):
