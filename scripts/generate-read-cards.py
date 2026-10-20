@@ -106,6 +106,18 @@ EN_CARDS = {
     22: ("KNEE", ["Sit down", "Water"]),
     23: ("DOCTOR", ["Today: rest", "Rice"]),
     24: ("CINEMA", ["Dogs", "5:00"]),
+    25: ("BEACH", ["Saturday", "10:00"]),
+    26: ("SOL", ["Tomorrow", "Table for 4"]),
+    27: ("PARTY", ["Friday", "Cake"]),
+    28: ("MAP", ["Mountains", "By car"]),
+    29: ("SUN", ["Tomorrow", "Park"]),
+    30: ("BOOKSHOP", ["Books", "Gifts"]),
+    31: ("HEALTH CENTRE", ["Thursday", "7:00"]),
+    32: ("SCHOOL", ["Music", "Sport"]),
+    33: ("PICNIC", ["Bread", "Juice"]),
+    34: ("MADRID", ["3:15", "6:00"]),
+    35: ("BEACH HOUSE", ["Near the beach", "Bus to school"]),
+    36: ("NEW YEAR", ["Swim", "Books"]),
 }
 
 for unit, (title, rows) in CARDS.items():
