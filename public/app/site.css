@@ -523,6 +523,7 @@ a.streak-chip { text-decoration: none; }
 
 .conv-card{position:relative;display:flex;gap:12px;align-items:center;min-height:100px;margin:12px 0;padding:10px;border:2px solid #D3E2F5;border-radius:16px;background:#fff;color:#0E1B3D;text-decoration:none}
 .conv-card img{width:40%;height:84px;object-fit:cover;object-position:center 20%;border-radius:10px}
+@media (min-width: 60rem){.conv-card img{width:240px;height:132px;flex:none}}
 .conv-card.locked img{filter:grayscale(1);opacity:.55}
 .conv-card.done{border-color:#2E9E5B}
 .conv-card .conv-text{display:flex;flex-direction:column}
