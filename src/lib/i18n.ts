@@ -405,11 +405,11 @@ export function localizeUnitTitle(ui: UiLang, title: string): string {
 }
 
 const LEVEL_TITLES: Record<string, Partial<Record<UiLang, string>>> = {
-  "First Words (A1)": { es: "Primeras palabras (A1)", de: "Erste W\u00f6rter (A1)", fr: "Premiers mots (A1)", th: "\u0e04\u0e33\u0e41\u0e23\u0e01 (A1)", zh: "\u6700\u521d\u7684\u8bcd\u8bed (A1)" },
-  "What Happened (A1)": { es: "Qu\u00e9 pas\u00f3 (A1)", de: "Was ist passiert (A1)", fr: "Ce qui s'est pass\u00e9 (A1)", th: "\u0e40\u0e01\u0e34\u0e14\u0e2d\u0e30\u0e44\u0e23\u0e02\u0e36\u0e49\u0e19 (A1)", zh: "\u53d1\u751f\u4e86\u4ec0\u4e48 (A1)" },
-  "Making Plans (A1-A2)": { es: "Haciendo planes (A1-A2)", de: "Pl\u00e4ne machen (A1-A2)", fr: "Faire des projets (A1-A2)", th: "\u0e27\u0e32\u0e07\u0e41\u0e1c\u0e19 (A1-A2)", zh: "\u505a\u8ba1\u5212 (A1-A2)" },
-  "Likes & Stories (A2)": { es: "Gustos e historias (A2)", de: "Vorlieben & Geschichten (A2)", fr: "Go\u00fbts et histoires (A2)", th: "\u0e2a\u0e34\u0e48\u0e07\u0e17\u0e35\u0e48\u0e0a\u0e2d\u0e1a\u0e41\u0e25\u0e30\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e23\u0e32\u0e27 (A2)", zh: "\u559c\u597d\u4e0e\u6545\u4e8b (A2)" },
-  "Getting Things Done (A2)": { es: "Lograr cosas (A2)", de: "Dinge erledigen (A2)", fr: "Faire avancer les choses (A2)", th: "\u0e17\u0e33\u0e2a\u0e34\u0e48\u0e07\u0e15\u0e48\u0e32\u0e07\u0e46 \u0e43\u0e2b\u0e49\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08 (A2)", zh: "\u628a\u4e8b\u60c5\u529e\u6210 (A2)" },
+  "First Words": { es: "Primeras palabras", de: "Erste W\u00f6rter", fr: "Premiers mots", th: "\u0e04\u0e33\u0e41\u0e23\u0e01", zh: "\u6700\u521d\u7684\u8bcd\u8bed" },
+  "What Happened": { es: "Qu\u00e9 pas\u00f3", de: "Was ist passiert", fr: "Ce qui s'est pass\u00e9", th: "\u0e40\u0e01\u0e34\u0e14\u0e2d\u0e30\u0e44\u0e23\u0e02\u0e36\u0e49\u0e19", zh: "\u53d1\u751f\u4e86\u4ec0\u4e48" },
+  "Making Plans": { es: "Haciendo planes", de: "Pl\u00e4ne machen", fr: "Faire des projets", th: "\u0e27\u0e32\u0e07\u0e41\u0e1c\u0e19", zh: "\u505a\u8ba1\u5212" },
+  "Likes & Stories": { es: "Gustos e historias", de: "Vorlieben & Geschichten", fr: "Go\u00fbts et histoires", th: "\u0e2a\u0e34\u0e48\u0e07\u0e17\u0e35\u0e48\u0e0a\u0e2d\u0e1a\u0e41\u0e25\u0e30\u0e40\u0e23\u0e37\u0e48\u0e2d\u0e07\u0e23\u0e32\u0e27", zh: "\u559c\u597d\u4e0e\u6545\u4e8b" },
+  "Getting Things Done": { es: "Lograr cosas", de: "Dinge erledigen", fr: "Faire avancer les choses", th: "\u0e17\u0e33\u0e2a\u0e34\u0e48\u0e07\u0e15\u0e48\u0e32\u0e07\u0e46 \u0e43\u0e2b\u0e49\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08", zh: "\u628a\u4e8b\u60c5\u529e\u6210" },
 };
 
 export function localizeLevelTitle(ui: UiLang, title: string): string {
