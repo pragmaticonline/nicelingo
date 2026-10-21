@@ -19,6 +19,19 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { TEXT_OVERRIDES } from "../content/tts-overrides.mjs";
 
+// Voice-scoped TTS prompt override lookup. A string value keeps its
+// existing behavior (applies wherever overrides are honored). An object
+// value { voice: text, default?: text } applies per voice slot, so one
+// voice can get a phonetic respell without touching the others' QA'd
+// clips. Returns null when no override applies.
+function overrideText(phrase, voice) {
+  const o = TEXT_OVERRIDES[phrase.id];
+  if (typeof o === "string") return o;
+  if (o && typeof o === "object")
+    return o[voice ?? "default"] ?? o.default ?? null;
+  return null;
+}
+
 const VOICES = {
   en: { provider: "workers-aura", model: "@cf/deepgram/aura-2-en", speaker: "luna" },
   es: { provider: "workers-aura", model: "@cf/deepgram/aura-2-es", speaker: "aquila" },
@@ -343,8 +356,8 @@ for (const phrase of manifest.phrases) {
       // which no TTS can render as Thai.
       const ttsText =
         voice.provider === "gateway-gemini"
-          ? (TEXT_OVERRIDES[phrase.id] ?? phrase.scoreText ?? phrase.text)
-          : (TEXT_OVERRIDES[phrase.id] ??
+          ? (overrideText(phrase, target.voice) ?? phrase.scoreText ?? phrase.text)
+          : (overrideText(phrase, target.voice) ??
             phrase.text.replace(/ a ([aeiouéèê])/g, " a, $1").replace(/ a (ri\.)/g, " a, $1"));
       const { wav } =
         voice.provider === "gateway-gemini"
@@ -361,8 +374,8 @@ for (const phrase of manifest.phrases) {
       // languages carry no scoreText, so this falls through to text there.
       const { bytes, contentType } =
         voice.provider === "gateway"
-          ? await synthGateway(TEXT_OVERRIDES[phrase.id] ?? phrase.scoreText ?? phrase.text, speaker)
-          : await synthAura(phrase.text, speaker);
+          ? await synthGateway(overrideText(phrase, target.voice) ?? phrase.scoreText ?? phrase.text, speaker)
+          : await synthAura(overrideText(phrase, target.voice) ?? phrase.text, speaker);
       writeFileSync(dest, bytes);
       console.log(`${phrase.id}[${target.voice ?? "default"}]: ${bytes.length} bytes (${contentType})`);
     }
