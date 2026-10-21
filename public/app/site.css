@@ -266,29 +266,44 @@ button.linklike { background: none; border: none; padding: 0; color: var(--link)
 }
 .foot-opt:hover { background: var(--wash); color: var(--ink); }
 .foot-legal { margin: 0; font-size: 13px; color: var(--muted); text-align: center; }
-.footer-main { display: grid; justify-items: center; gap: 8px; width: 100%; }
-.footer-col:nth-child(3) { grid-column: 1 / -1; }
-.footer-col:nth-child(3) ul { justify-items: center; }
-.footer-col h4 { display: none; }
+/* Mobile footer: brand + language span full width, link groups in a
+ * centered 2-column grid with headings. Legal flows into row 2. */
+.footer-main {
+  display: grid; grid-template-columns: 1fr 1fr;
+  column-gap: 24px; row-gap: 28px;
+  max-width: 400px; margin: 0 auto; width: 100%;
+}
+.foot-brand, .foot-lang { grid-column: 1 / -1; }
+.foot-links { display: contents; }
+.footer-col { grid-column: auto; text-align: left; min-width: 0; }
+.footer-col h4 { display: block; font-size: 13px; font-weight: 600; color: #5b6475; margin: 0 0 4px; }
 .footer-col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; align-content: start; }
+.footer-col .foot-link { display: flex; justify-content: flex-start; min-height: 44px; padding: 10px 0; }
 .footer-bottom { width: 100%; }
+/* Quiet language control on both mobile and desktop: 1px divider
+ * border, medium weight, fits content, globe icon. */
+.foot-switch summary {
+  min-height: 40px; min-width: 0;
+  padding: 0.4rem 1rem;
+  border: 1px solid #dbe4f0; border-radius: 999px;
+  font-weight: 500; gap: 0.45rem;
+}
 @media (min-width: 48rem) {
   .footer-main {
     display: grid;
     grid-template-columns: 2fr repeat(3, 1fr) auto;
     gap: 32px;
+    max-width: none;
     align-items: start;
     justify-items: stretch;
   }
   .foot-brand { justify-content: start; }
+  .foot-brand, .foot-lang { grid-column: auto; }
   .foot-tag, .foot-beta { text-align: left; }
-  .foot-links { display: contents; }
-  .footer-col:nth-child(3) { grid-column: auto; }
-  .footer-col h4 { display: block; font-size: 13px; font-weight: 600; color: #5b6475; margin: 0 0 12px; }
+  .footer-col h4 { margin: 0 0 12px; }
   .footer-col ul { display: flex; flex-direction: column; gap: 10px; text-align: left; }
-  .footer-col .foot-link { justify-content: flex-start; min-height: 0; }
+  .footer-col .foot-link { justify-content: flex-start; min-height: 0; padding: 0; }
   .foot-lang { justify-items: start; }
-  .foot-switch summary { min-height: 40px; min-width: 160px; }
   .footer-bottom {
     margin-top: 32px; padding-top: 16px;
     border-top: 1px solid #dbe4f0;

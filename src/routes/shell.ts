@@ -127,7 +127,7 @@ function appLangControl(uiLang: UiLang, path: string): string {
     (l) =>
       `<a class="foot-opt" lang="${l.code}" href="${escapeHtml(path)}${sep}ui=${l.code}"${l.code === uiLang ? ` aria-current="true"` : ""}>${escapeHtml(l.ownName)}</a>`,
   ).join("");
-  return `<div class="foot-lang"><p class="foot-label">${escapeHtml(d.appLanguage)}</p><details class="foot-switch"><summary class="foot-current">${escapeHtml(cur.ownName)} ▾</summary><div class="foot-opts" role="menu">${items}</div></details></div>`;
+  return `<div class="foot-lang"><p class="foot-label">${escapeHtml(d.appLanguage)}</p><details class="foot-switch"><summary class="foot-current"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.9 5.7 3.9 9s-1.4 6.4-3.9 9c-2.5-2.6-3.9-5.7-3.9-9S9.5 5.6 12 3z"/></svg>${escapeHtml(cur.ownName)} ▾</summary><div class="foot-opts" role="menu">${items}</div></details></div>`;
 }
 
 function footerColHtml(heading: string, links: [string, string][]): string {
