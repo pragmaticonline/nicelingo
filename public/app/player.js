@@ -1612,6 +1612,7 @@ async function bootConversation(lang, unit) {
     watch.addEventListener("click", async () => {
       const hero = appImg({ class: "hero-img", src: scene.imageUrl, alt: "" });
       player.screen(h("div", { class: "screen" },
+        topbar({ completed: [], activities: [], activity: null, stepText: "" }),
         hero,
         ...scene.lines.map((l) => h("p", { class: `bubble ${l.speaker === "A" ? "bubble-a" : "bubble-b"}` }, l.text))));
       for (const l of scene.lines) {
@@ -1663,6 +1664,7 @@ async function bootConversation(lang, unit) {
       });
     });
     player.screen(h("div", { class: "screen" },
+      topbar({ completed: [], activities: [], activity: null, stepText: "" }),
       appImg({ class: "hero-img", src: scene.imageUrl, alt: "" }),
       h("h1", {}, scene.title),
       watch,
