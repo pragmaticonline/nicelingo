@@ -1570,7 +1570,7 @@ async function bootCheckpoint(lang, level, unit) {
 // ---- Conversation lessons (Phase 2/2b) --------------------------------
 // Watch the scene, comprehension, then role-play: your lines first
 // spoken, then recalled (text hidden), then the other role. One
-// typed round is included.
+// typed round is included, except in vocal-only languages.
 async function bootConversation(lang, unit) {
   player.screen(h("div", { class: "screen" }, h("p", { class: "sub" }, S.loading)));
   if (!(await api.me())) await api.anonymous();
@@ -1636,7 +1636,9 @@ async function bootConversation(lang, unit) {
       const aLines = scene.lines.filter((l) => l.speaker === "A");
       for (const l of bLines) questions.push({ phrase: l, activity: "speak-score" });
       for (const q of scene.readCard?.questions ?? []) questions.push({ phrase: q.prompt, activity: "read-card", options: q.options, answerId: q.answerId, cardImage: scene.readCard.imageUrl });
-      if (bLines[0]) questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
+      // Vocal-only languages (Thai, Mandarin) never show text input:
+      // learners don't learn the script, so typing teaches nothing.
+      if (bLines[0] && lang !== "th" && lang !== "zh") questions.push({ phrase: bLines[0], activity: writeSafe(bLines[0], "read-write") });
       for (const l of bLines) questions.push({ phrase: l, activity: "recall" });
       for (const l of aLines) questions.push({ phrase: l, activity: "recall" });
       runSession({

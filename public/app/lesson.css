@@ -48,8 +48,22 @@
   --bg: #eef6ff;
   --card: #ffffff;
   --radius: 20px;
-  --font-head: "Bricolage Grotesque", system-ui, sans-serif;
-  --font-body: "Figtree", system-ui, sans-serif;
+  --font-head: "Bricolage Grotesque", "Bricolage Fallback", system-ui, sans-serif;
+  --font-body: "Figtree", "Figtree Fallback", system-ui, sans-serif;
+}
+/* Same metric-matched fallbacks as site.css (player loads only this
+ * sheet): Bricolage asc 930 / desc -270, Figtree asc 950 / desc -250. */
+@font-face {
+  font-family: "Bricolage Fallback";
+  src: local("-apple-system"), local("BlinkMacSystemFont"), local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"), local("sans-serif");
+  ascent-override: 93%; descent-override: 27%; line-gap-override: 0%;
+  size-adjust: 102.5%;
+}
+@font-face {
+  font-family: "Figtree Fallback";
+  src: local("-apple-system"), local("BlinkMacSystemFont"), local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"), local("sans-serif");
+  ascent-override: 95%; descent-override: 25%; line-gap-override: 0%;
+  size-adjust: 97%;
 }
 
 * { box-sizing: border-box; }

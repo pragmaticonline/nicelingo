@@ -29,6 +29,25 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* Metric-matched fallbacks so the swap from system-ui is invisible.
+ * Overrides measured from the real woff2 files (both upm 1000):
+ * Bricolage asc 930 / desc -270 / x-height 0.528; Figtree asc 950 /
+ * desc -250 / x-height 0.50. size-adjust targets a typical system-ui
+ * x-height (~0.515); Thai/Han text always uses system-ui (no CJK
+ * webfont), so it never swaps. */
+@font-face {
+  font-family: "Bricolage Fallback";
+  src: local("-apple-system"), local("BlinkMacSystemFont"), local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"), local("sans-serif");
+  ascent-override: 93%; descent-override: 27%; line-gap-override: 0%;
+  size-adjust: 102.5%;
+}
+@font-face {
+  font-family: "Figtree Fallback";
+  src: local("-apple-system"), local("BlinkMacSystemFont"), local("Segoe UI"), local("Roboto"), local("Helvetica Neue"), local("Arial"), local("sans-serif");
+  ascent-override: 95%; descent-override: 25%; line-gap-override: 0%;
+  size-adjust: 97%;
+}
+
 :root {
   --bg: #eef6ff;
   --card: #ffffff;
@@ -45,8 +64,8 @@
   --sun: #ffe066;
   --band-soft: #c9d8f2;
   --wash: #e4ebf3;
-  --head: "Bricolage Grotesque", system-ui, sans-serif;
-  --body-font: "Figtree", system-ui, sans-serif;
+  --head: "Bricolage Grotesque", "Bricolage Fallback", system-ui, sans-serif;
+  --body-font: "Figtree", "Figtree Fallback", system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -78,6 +97,21 @@ a:hover { color: var(--link-hover); }
 @media (min-width: 60rem) { .brand svg { width: 44px; height: 44px; } }
 .brand b { font-family: var(--head); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; }
 .head-sp { flex: 1; }
+/* Course badge: which language this page teaches. Compact pill next to
+ * the logo; the UI-language picker stays inside the account menu. */
+.course-badge {
+  display: inline-flex; align-items: center; gap: 6px; flex: 0 1 auto;
+  min-width: 0; max-width: 38vw; overflow: hidden; white-space: nowrap;
+  text-overflow: ellipsis; min-height: 40px; padding: 0 12px;
+  border: 2px solid var(--line); border-radius: 999px;
+  font-weight: 700; font-size: 0.9rem; color: var(--ink); text-decoration: none;
+  background: #fff;
+}
+/* Course hero: H1 names the course in the visitor's UI language. */
+.course-hero { margin: 0.4rem 0 0.2rem; }
+.course-h1 { font-family: var(--head); font-size: 1.4rem; margin: 0; }
+.course-h1 .native { font-weight: 600; font-size: 1.05rem; color: var(--muted); }
+.course-sub { margin: 0.15rem 0 0; color: var(--muted); font-weight: 600; }
 @media (max-width: 39.99rem) {
   .site-head {
     flex-wrap: nowrap; gap: 8px;

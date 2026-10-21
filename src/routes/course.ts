@@ -2,7 +2,7 @@
 // Server-rendered; a small inline script hydrates progress and account
 // state from /api/progress/all plus the localStorage mirror.
 import { CURRICULUM, LEVELS, UNITS, conversations, isFreeLesson, lessons, type Lang } from "../lessons/curriculum";
-import { pickerLanguages } from "../lessons/languages";
+import { courseBlurb, courseLearn, courseName, courseTitle, pickerLanguages } from "../lessons/languages";
 import {
   ACTIVITY_SHORT,
   activitiesFor,
@@ -305,10 +305,10 @@ export function coursePage(lang: string, opts: CourseOpts): string {
   const tabs = LEVELS.map((l) => {
     const st = levelStats(lang, l.level, progress);
     if (st.total === 0) {
-      return `<span class="tab-off" aria-disabled="true">${l.level} ${escapeHtml(localizeLevelTitle(ui, l.title))} · ${d.comingSoon}</span>`;
+      return `<span class="tab-off" aria-disabled="true">${escapeHtml(courseName(ui, lang))} · ${l.level} ${escapeHtml(localizeLevelTitle(ui, l.title))} · ${d.comingSoon}</span>`;
     }
     const cur = l.level === selected ? ` aria-current="page"` : "";
-    return `<a class="tab" href="/${lang}?level=${l.level}"${cur}>${l.level} ${escapeHtml(localizeLevelTitle(ui, l.title))} <span class="cnt">${st.done}/${st.total}</span></a>`;
+    return `<a class="tab" href="/${lang}?level=${l.level}"${cur}>${escapeHtml(courseName(ui, lang))} · ${l.level} ${escapeHtml(localizeLevelTitle(ui, l.title))} <span class="cnt">${st.done}/${st.total}</span></a>`;
   }).join("");
 
   const levelUnits = UNITS.filter((u) =>
@@ -373,7 +373,10 @@ export function coursePage(lang: string, opts: CourseOpts): string {
   for (const u of UNITS) units[u.unit] = u.lessons;
   const blob = JSON.stringify({ lang, server: progress, totals, units, ui: { stepsComplete: d.stepsComplete, lessonsDone: d.lessonsDone, doneWord: d.doneWord, resumeWord: d.resumeWord, dayStreak: d.dayStreak, checkpointIntro: d.checkpointIntro }, days: opts.streakDays ?? [] });
 
-  const head = `<header class="site-head">${brandHtml()}<span class="head-sp"></span>${streakChipHtml(computeStreak(opts.streakDays ?? [], localDayString()), ui, `/${lang}/progress`)}<span data-account>${accountMenuHtml({ user, subscribed, ui, path: `/${lang}` })}</span></header>`;
+  const badge = `<a class="course-badge" href="/?change=1" aria-label="${escapeHtml(courseLearn(ui, lang))}"><span aria-hidden="true">${info.flag}</span> ${escapeHtml(courseName(ui, lang))} ▾</a>`;
+  const levelTitle = LEVELS.find((l) => l.level === selected)?.title ?? "";
+  const hero = `<div class="course-hero"><h1 class="course-h1"><span aria-hidden="true">${info.flag}</span> ${escapeHtml(courseLearn(ui, lang))} <span class="native">(${escapeHtml(info.ownName)})</span></h1><p class="course-sub">${selected} · ${escapeHtml(localizeLevelTitle(ui, levelTitle))}</p></div>`;
+  const head = `<header class="site-head">${brandHtml()}${badge}<span class="head-sp"></span>${streakChipHtml(computeStreak(opts.streakDays ?? [], localDayString()), ui, `/${lang}/progress`)}<span data-account>${accountMenuHtml({ user, subscribed, ui, path: `/${lang}` })}</span></header>`;
   // Daily review strip (Phase 1a): slim row directly above the
   // Continue card, hidden entirely when nothing is due. Absorbs
   // the old Practise-my-mistakes button (weak phrases are due).
@@ -400,6 +403,6 @@ export function coursePage(lang: string, opts: CourseOpts): string {
   const testOutLine = levelStarted
     ? ""
     : `<p class="testout-line"><a class="linklike" href="/${lang}/challenge/${selected}?mode=testout">${escapeHtml(d.testOutLink)}</a></p>`;
-  const body = `${head}${reviewStrip}${continueCard(lang, info, locked(next.n), subscribed, returnUrl, progress, ui)}${signinNote}<nav class="tabs" aria-label="Levels">${tabs}</nav>${testOutLine}${sections}${challengeCard}${siteFooterHtml(ui, `/${lang}`, { registered })}<script type="application/json" id="course-data">${blob.replace(/</g, "\\u003c")}</script>${CLIENT}`;
-  return pageShell({ title: `${info.ownName} course · Nicelingo`, lang: ui, origin: opts.origin ?? "", canonicalPath: `/${lang}`, body });
+  const body = `${head}${hero}${reviewStrip}${continueCard(lang, info, locked(next.n), subscribed, returnUrl, progress, ui)}${signinNote}<nav class="tabs" aria-label="Levels">${tabs}</nav>${testOutLine}${sections}${challengeCard}${siteFooterHtml(ui, `/${lang}`, { registered })}<script type="application/json" id="course-data">${blob.replace(/</g, "\\u003c")}</script>${CLIENT}`;
+  return pageShell({ title: courseTitle(ui, lang), description: courseBlurb(ui, lang), lang: ui, origin: opts.origin ?? "", canonicalPath: `/${lang}`, body });
 }

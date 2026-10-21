@@ -9,6 +9,8 @@ export function lessonPage(lang = "en"): string {
 <meta name="theme-color" content="#1a5feb">
 <meta name="monetag" content="ab1fd95d24c765cc004b8d115b8f76a9">
 <title>Lesson 1 · Nicelingo</title>
+<link rel="preload" href="/fonts/bricolagegrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/app/lesson.css">
 <link rel="icon" href="/logo/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/logo/favicon-32.png" sizes="32x32" type="image/png">

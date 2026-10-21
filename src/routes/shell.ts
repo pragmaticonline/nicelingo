@@ -21,9 +21,12 @@ export function pageShell(opts: {
   canonicalPath?: string;
   /** Private pages (sign-in, account, students): keep out of indexes. */
   noindex?: boolean;
+  /** Per-page meta description; defaults to the generic tagline. */
+  description?: string;
   /** Inline JSON-LD block (already stringified and escaped). */
   jsonLd?: string;
 }): string {
+  const desc = opts.description ?? DESCRIPTION;
   const canon = opts.canonicalPath ? escapeHtml(opts.canonicalPath) : null;
   const canonical = canon
     ? `<link rel="canonical" href="${escapeHtml(opts.origin)}${canon}">`
@@ -41,16 +44,16 @@ export function pageShell(opts: {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${escapeHtml(opts.title)}</title>
-<meta name="description" content="${DESCRIPTION}">
+<meta name="description" content="${escapeHtml(desc)}">
 ${opts.noindex ? `<meta name="robots" content="noindex">` : `${canonical}${hreflang}`}
 <meta name="theme-color" content="#1a5feb">
 <meta name="monetag" content="ab1fd95d24c765cc004b8d115b8f76a9">
 <meta property="og:title" content="${escapeHtml(opts.title)}">
-<meta property="og:description" content="${DESCRIPTION}">
+<meta property="og:description" content="${escapeHtml(desc)}">
 <meta property="og:image" content="${opts.origin}/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(opts.title)}">
-<meta name="twitter:description" content="${DESCRIPTION}">
+<meta name="twitter:description" content="${escapeHtml(desc)}">
 <meta name="twitter:image" content="${opts.origin}/og.png">
 ${opts.jsonLd ? `<script type="application/ld+json">${opts.jsonLd}</script>` : ""}
 <link rel="icon" href="/logo/favicon.svg" type="image/svg+xml">
@@ -58,6 +61,8 @@ ${opts.jsonLd ? `<script type="application/ld+json">${opts.jsonLd}</script>` : "
 <link rel="icon" href="/logo/favicon-16.png" sizes="16x16" type="image/png">
 <link rel="apple-touch-icon" href="/logo/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/bricolagegrotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/app/site.css">
 </head>
 <body>

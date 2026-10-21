@@ -20,10 +20,16 @@ import { fileURLToPath } from "node:url";
 const VOICES = {
   en: { provider: "workers-aura", model: "@cf/deepgram/aura-2-en", speaker: "luna" },
   es: { provider: "workers-aura", model: "@cf/deepgram/aura-2-es", speaker: "aquila" },
-  fr: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
+  fr: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon", shapeWord: true },
   zh: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
   th: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Sulafat" },
-  de: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon" },
+  // Eight clips below are one-off renders from other voices, kept as files
+  // (this script skips existing files, so they survive reruns; deleting
+  // one reverts it to Charon): de laugh-words (gelacht, lachen, lacht,
+  // lachte) via MiniMax speech-2.8-turbo English_expressive_narrator and
+  // fr rire/souri/sourit/sourira via MeloTTS, because Gemini performs
+  // laughter instead of saying laugh-words.
+  de: { provider: "gateway-gemini", model: "google/gemini-3.8-flash-tts", speaker: "Charon", shapeWord: true },
 };
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -110,10 +116,16 @@ async function synth(voice, text) {
     return { wav };
   }
   // Gateway providers (MiniMax, Gemini) with transient retries.
+  // Latin-script Gemini words get the Aura sentence shaping (capital +
+  // period): bare "lachen" came back performed as laughter, "Lachen."
+  // comes back spoken. Thai/Mandarin scripts are untouched.
   let res = null;
   for (let attempt = 1; attempt <= 4; attempt++) {
+    const gtext = voice.shapeWord && !/^[A-ZÄÖÜÁÉÍÓÚÀÂÇÈÉÊÎÔÛ]/.test(text) && !text.endsWith(".")
+      ? `${text[0].toUpperCase()}${text.slice(1)}.`
+      : text;
     const input = voice.provider === "gateway-gemini"
-      ? { text, voice: voice.speaker }
+      ? { text: gtext, voice: voice.speaker }
       : { text, voice_id: voice.speaker, format: "mp3" };
     res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/ai/run`, {
       method: "POST", headers, body: JSON.stringify({ model: voice.model, input }),
