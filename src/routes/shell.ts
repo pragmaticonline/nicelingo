@@ -130,25 +130,28 @@ function appLangControl(uiLang: UiLang, path: string): string {
   return `<div class="foot-lang"><p class="foot-label">${escapeHtml(d.appLanguage)}</p><details class="foot-switch"><summary class="foot-current">${escapeHtml(cur.ownName)} ▾</summary><div class="foot-opts" role="menu">${items}</div></details></div>`;
 }
 
-function footerLinksHtml(d: UiDict, registered: boolean): string {
-  const left = [
-    `<a class="foot-link" href="/billing">${escapeHtml(d.premiumBadge)}</a>`,
-    ...(registered
-      ? []
-      : [`<a class="foot-link" href="/register">${escapeHtml(d.freeAccount)}</a>`]),
-    `<a class="foot-link" href="/contact">${escapeHtml(d.helpAndContact)}</a>`,
-  ].join("");
-  const right = (
-    [
-      [d.terms, "/terms"],
-      [d.privacy, "/privacy"],
-      [d.refunds, "/refunds"],
-      [d.developers, "/developers"],
-    ] as [string, string][]
-  )
-    .map(([label, href]) => `<a class="foot-link" href="${href}">${escapeHtml(label)}</a>`)
+function footerColHtml(heading: string, links: [string, string][]): string {
+  const items = links
+    .map(([label, href]) => `<li><a class="foot-link" href="${href}">${escapeHtml(label)}</a></li>`)
     .join("");
-  return `<nav class="foot-links"><div class="foot-col">${left}</div><div class="foot-col">${right}</div></nav>`;
+  return `<div class="footer-col"><h4>${escapeHtml(heading)}</h4><ul>${items}</ul></div>`;
+}
+
+function footerLinksHtml(d: UiDict, registered: boolean): string {
+  const product: [string, string][] = [
+    [d.premiumBadge, "/billing"],
+    ...(registered ? [] : [[d.freeAccount, "/register"] as [string, string]]),
+  ];
+  const support: [string, string][] = [
+    [d.helpAndContact, "/contact"],
+    [d.refunds, "/refunds"],
+    [d.developers, "/developers"],
+  ];
+  const legal: [string, string][] = [
+    [d.terms, "/terms"],
+    [d.privacy, "/privacy"],
+  ];
+  return `<nav class="foot-links" aria-label="Footer">${footerColHtml(d.footerProduct, product)}${footerColHtml(d.footerSupport, support)}${footerColHtml(d.footerLegal, legal)}</nav>`;
 }
 
 /** Shared footer for the picker and course home: brand + tagline, the
@@ -160,5 +163,5 @@ export function siteFooterHtml(
   opts: { registered?: boolean } = {},
 ): string {
   const d = t(uiLang);
-  return `<footer class="site-foot"><div class="foot-brand"><span class="foot-mark">${LOGO_SVG}</span><b>nicelingo</b><span class="beta-chip">BETA</span><p class="foot-tag">${escapeHtml(d.heroEyebrow)}</p><p class="foot-beta">${escapeHtml(d.betaNote)}</p></div>${footerLinksHtml(d, opts.registered ?? false)}${appLangControl(uiLang, path)}<p class="foot-legal">© 2026 Nicelingo · Payments by Stripe</p></footer>`;
+  return `<footer class="site-foot"><div class="footer-main"><div class="foot-brand"><span class="foot-mark">${LOGO_SVG}</span><b>nicelingo</b><span class="beta-chip">BETA</span><p class="foot-tag">${escapeHtml(d.heroEyebrow)}</p><p class="foot-beta">${escapeHtml(d.betaNote)}</p></div>${footerLinksHtml(d, opts.registered ?? false)}${appLangControl(uiLang, path)}</div><div class="footer-bottom"><p class="foot-legal">© 2026 Nicelingo</p></div></footer>`;
 }

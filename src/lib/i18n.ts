@@ -84,6 +84,7 @@ const en = {
   contact: "Contact",
   helpAndContact: "Help and contact",
   appLanguage: "App language",
+  footerProduct: "Product", footerSupport: "Support", footerLegal: "Legal", securePayments: "Secure payments via Stripe",
 };
 
 export type UiDict = typeof en;
@@ -137,6 +138,7 @@ const es: UiDict = {
   contact: "Contacto",
   helpAndContact: "Ayuda y contacto",
   appLanguage: "Idioma de la app",
+  footerProduct: "Producto", footerSupport: "Ayuda", footerLegal: "Legal", securePayments: "Pagos seguros con Stripe",
 };
 
 const de: UiDict = {
@@ -188,6 +190,7 @@ const de: UiDict = {
   contact: "Kontakt",
   helpAndContact: "Hilfe und Kontakt",
   appLanguage: "App-Sprache",
+  footerProduct: "Produkt", footerSupport: "Hilfe", footerLegal: "Rechtliches", securePayments: "Sichere Zahlung \u00fcber Stripe",
 };
 
 const fr: UiDict = {
@@ -239,6 +242,7 @@ const fr: UiDict = {
   contact: "Contact",
   helpAndContact: "Aide et contact",
   appLanguage: "Langue de l'app",
+  footerProduct: "Produit", footerSupport: "Aide", footerLegal: "Mentions l\u00e9gales", securePayments: "Paiements s\u00e9curis\u00e9s via Stripe",
 };
 
 const th: UiDict = {
@@ -290,6 +294,7 @@ const th: UiDict = {
   contact: "\u0e15\u0e34\u0e14\u0e15\u0e48\u0e2d",
   helpAndContact: "\u0e04\u0e27\u0e32\u0e21\u0e0a\u0e48\u0e27\u0e22\u0e40\u0e2b\u0e25\u0e37\u0e2d\u0e41\u0e25\u0e30\u0e15\u0e34\u0e14\u0e15\u0e48\u0e2d",
   appLanguage: "\u0e20\u0e32\u0e29\u0e32\u0e02\u0e2d\u0e07\u0e41\u0e2d\u0e1b",
+  footerProduct: "\u0e1c\u0e25\u0e34\u0e15\u0e20\u0e31\u0e13\u0e11\u0e4c", footerSupport: "\u0e0a\u0e48\u0e27\u0e22\u0e40\u0e2b\u0e25\u0e37\u0e2d", footerLegal: "\u0e01\u0e0e\u0e2b\u0e21\u0e32\u0e22", securePayments: "\u0e0a\u0e33\u0e23\u0e30\u0e40\u0e07\u0e34\u0e19\u0e2d\u0e22\u0e48\u0e32\u0e07\u0e1b\u0e25\u0e2d\u0e14\u0e20\u0e31\u0e22\u0e1c\u0e48\u0e32\u0e19 Stripe",
 };
 
 const zh: UiDict = {
@@ -341,6 +346,7 @@ const zh: UiDict = {
   contact: "\u8054\u7cfb",
   helpAndContact: "\u5e2e\u52a9\u4e0e\u8054\u7cfb",
   appLanguage: "\u5e94\u7528\u8bed\u8a00",
+  footerProduct: "\u4ea7\u54c1", footerSupport: "\u5e2e\u52a9", footerLegal: "\u6cd5\u5f8b", securePayments: "\u901a\u8fc7 Stripe \u5b89\u5168\u652f\u4ed8",
 };
 
 export const STRINGS: Record<UiLang, UiDict> = { en, es, de, fr, th, zh };

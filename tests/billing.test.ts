@@ -105,6 +105,7 @@ describe("billing routes", () => {
     expect(html).toContain('data-plan="monthly"');
     expect(html).toContain('data-plan="yearly"');
     expect(html).toContain("Unit 1 (lessons 1-4) is free. Lesson 5 and up needs Premium.");
+    expect(html).toContain("Secure payments via Stripe");
   });
 
   it("serves the cancel page", async () => {

@@ -525,7 +525,7 @@ app.get("/api/lessons/:lang/:lesson", async (c) => {
 });
 
 app.post("/api/score", async (c) => {
-  const { phraseId, audio, prevVerdict, spokenAlt } = await c.req.json();
+  const { phraseId, audio, prevVerdict, spokenAlt, challenge } = await c.req.json();
   const prev: Verdict | null =
     prevVerdict === "green" || prevVerdict === "yellow" || prevVerdict === "red"
       ? prevVerdict
@@ -560,7 +560,32 @@ app.post("/api/score", async (c) => {
     : /^\d{3}-/.test(phraseId)
       ? phraseId.slice(0, 3)
       : (/^[a-z]{2}-(\d{3})-/.exec(phraseId)?.[1] ?? "999");
-  if (!paywallDisabled(c.env) && !isFreeLesson(lesson)) {
+  // Challenge/testout rounds score conversation lines from paid units
+  // (Level 1 spans units 1-12). The challenge endpoint serves those lines
+  // to anyone allowed to attempt it, so scoring them is a legitimate
+  // attempt, not a gate bypass: recheck the same access rules here
+  // (Level 1 free; Level 2+ subscribed or testout-open) instead of the
+  // manifest gate. Unit membership is deterministic; no random rebuild.
+  let challengeOk = false;
+  if (challenge && typeof challenge === "object") {
+    const { lang: chLang, level: chLevel, mode: chMode } = challenge as {
+      lang?: unknown; level?: unknown; mode?: unknown;
+    };
+    const cm = /^([a-z]{2})-conv-(\d+)(?:-|$)/.exec(phraseId);
+    if (
+      cm && cm[1] === chLang && isPickerLang(chLang) &&
+      Number.isInteger(chLevel) && (chLevel as number) >= 1 && (chLevel as number) <= 5 &&
+      (chMode === "challenge" || chMode === "testout") &&
+      levelUnits(chLevel as number).includes(Number(cm[2]))
+    ) {
+      const uid = await currentUserId(c);
+      if (uid && c.env?.DB) {
+        const sub = await d1SubscriptionStore(c.env.DB).isSubscribed(uid).catch(() => false);
+        if ((chLevel as number) === 1 || sub || chMode === "testout") challengeOk = true;
+      }
+    }
+  }
+  if (!challengeOk && !paywallDisabled(c.env) && !isFreeLesson(lesson)) {
     const gate = await subscriptionGate(c);
     if (gate) return gate;
   }

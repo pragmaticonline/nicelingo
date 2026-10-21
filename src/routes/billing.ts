@@ -39,6 +39,8 @@ h1{font-size:1.8rem}
 .btn.secondary{background:#fff;color:#0e1b3d;border:2px solid #0e1b3d;box-shadow:0 4px 0 #0e1b3d}
 input[type=email]{width:100%;box-sizing:border-box;font-size:1rem;padding:0.8rem;border:2px solid #d3e2f5;border-radius:12px;margin:0.5rem 0 1rem;min-height:56px;background:#fff;color:#0e1b3d}
 .note{color:#4c5873;font-size:0.95rem}
+.secure-pay{display:flex;align-items:center;gap:0.45rem}
+.secure-pay svg{flex:none}
 .error{color:#b00020;font-weight:600}
 a{color:#1247b8}`;
 
@@ -95,6 +97,7 @@ export function billingPage(
 <div class="plan"><h2>${d.monthlyPlan} · ${opts.thailand ? d.thbMonthlyPrice : d.monthlyPrice}</h2><p>${d.cancelAnytime}</p><button class="btn" data-plan="monthly">${d.subscribeMonthly}</button></div>
 <div class="plan"><h2>${d.yearlyPlan} · ${opts.thailand ? d.thbYearlyPrice : d.yearlyPrice}</h2><p>${d.twoMonthsFree}</p><button class="btn" data-plan="yearly">${d.subscribeYearly}</button></div>
 </div>
+<p class="note secure-pay"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${escapeHtml(d.securePayments)}</p>
 ${promptPay}
 <p class="note" id="manage-note" hidden>${d.paymentsNote} <button class="btn secondary" id="manage">${d.manageSubscription}</button></p>
 <p class="error" id="err" role="alert"></p>

@@ -93,11 +93,11 @@ const api = {
       queue.enqueue(activity, lessonId);
     }
   },
-  async score(phraseId, audioBase64, prevVerdict, spokenAlt) {
+  async score(phraseId, audioBase64, prevVerdict, spokenAlt, context) {
     const r = await fetch("/api/score", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phraseId, audio: audioBase64, prevVerdict: prevVerdict ?? null, ...(spokenAlt ? { spokenAlt } : {}) }),
+      body: JSON.stringify({ phraseId, audio: audioBase64, prevVerdict: prevVerdict ?? null, ...(spokenAlt ? { spokenAlt } : {}), ...(context ? { challenge: context } : {}) }),
     });
     if (!r.ok) throw new Error("score failed");
     return r.json();
@@ -1577,6 +1577,15 @@ async function bootConversation(lang, unit) {
   let data = null;
   try {
     const r = await fetch(`/api/conversation/${lang}/${unit}`, { credentials: "include" });
+    if (r.status === 401 || r.status === 402) {
+      // Gated conversation (typed URL or stale link): the lesson
+      // paywall, never the generic load error.
+      player.screen(h("div", { class: "screen" },
+        h("div", { class: "sun" }, h("b", {}, S.paywallTitle), h("p", {}, S.paywallText)),
+        h("a", { class: "btn", href: "/billing" }, S.seePlans),
+        h("p", {}, h("a", { href: `/${lang}` }, "← " + (S.backToCourse ?? "Back")))));
+      return;
+    }
     if (r.ok) data = await r.json();
   } catch { /* offline */ }
   if (!data?.scene) {
@@ -1817,7 +1826,7 @@ async function bootChallenge(lang, level, mode) {
           reader.onerror = reject;
           reader.readAsDataURL(blob);
         });
-        const res = await api.score(phrase.id, base64, null, phrase.spokenAlt);
+        const res = await api.score(phrase.id, base64, null, phrase.spokenAlt, { lang, level, mode });
         const sc = typeof res.score === "number" ? res.score : res.pass ? 100 : 0;
         tried[idx]++;
         best[idx] = Math.max(best[idx], sc);

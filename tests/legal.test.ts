@@ -37,14 +37,19 @@ describe("shared footer", () => {
     const foot = footerOf(html);
     expect(foot).toContain("foot-brand");
     expect(foot).toContain("See it. Hear it. Say it.");
-    // Two-column link grid: Premium/Free/Help left, legal right.
+    // Three labeled link columns: Product, Support, Legal.
+    for (const h of ["Product", "Support", "Legal"]) {
+      expect(foot).toContain(`<h4>${h}</h4>`);
+    }
     expect(foot).toContain('href="/billing"');
     expect(foot).toContain("Free account");
     expect(foot).toContain('href="/contact"');
     for (const href of ['href="/terms"', 'href="/privacy"', 'href="/refunds"', 'href="/developers"']) {
       expect(foot).toContain(href);
     }
-    expect(foot).toContain("Payments by Stripe");
+    // Bottom bar is copyright only; the Stripe note lives on /billing.
+    expect(foot).toContain("© 2026 Nicelingo</p>");
+    expect(foot).not.toContain("Payments by Stripe");
   });
 
   it("offers one app-language control with six scripted options", async () => {

@@ -68,4 +68,25 @@ describe("conversation lessons (Phase 2)", () => {
     expect(html).toContain('href="/xx/conversation/1"');
     expect(html).toContain("conv-card");
   });
+
+  it("locks paid conversation banners to billing for free users", () => {
+    const free = coursePage("xx", {
+      progress: {},
+      registered: true,
+      level: 2,
+      user: { email: "a@b.c", isAnonymous: false },
+    });
+    expect(free).toContain("conv-card locked");
+    expect(free).toContain("/billing?return=");
+    expect(free).not.toContain('href="/xx/conversation/2"');
+    const sub = coursePage("xx", {
+      progress: {},
+      registered: true,
+      subscribed: true,
+      level: 2,
+      user: { email: "a@b.c", isAnonymous: false },
+    });
+    expect(sub).toContain('href="/xx/conversation/2"');
+    expect(sub).not.toContain("conv-card locked");
+  });
 });
