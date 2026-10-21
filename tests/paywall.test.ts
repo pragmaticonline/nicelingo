@@ -35,6 +35,13 @@ describe("paid content gate", () => {
     expect((await app.request("/static/lesson-006/images/thumb.jpg")).status).toBe(404);
   });
 
+  it("leaves conversation scene banners public but gates line images", async () => {
+    // Scene banners are teasers for locked conversation cards; per-line
+    // gesture images are lesson content and stay gated.
+    expect((await app.request("/static/lesson-006/images/conv-u2.jpg")).status).toBe(404);
+    expect((await app.request("/static/lesson-006/images/conv-u2-l1.jpg")).status).toBe(401);
+  });
+
   it("still 404s unknown lessons and media", async () => {
     expect((await app.request("/api/lessons/xx/999")).status).toBe(404);
   });

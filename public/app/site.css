@@ -487,6 +487,8 @@ a.streak-chip { text-decoration: none; }
 .conv-card{display:flex;gap:12px;align-items:center;min-height:100px;margin:12px 0;padding:10px;border:2px solid #D3E2F5;border-radius:16px;background:#fff;color:#0E1B3D;text-decoration:none}
 .conv-card img{width:40%;height:84px;object-fit:cover;object-position:center 20%;border-radius:10px}
 .conv-card.done{border-color:#2E9E5B}
+.conv-card .conv-text{display:flex;flex-direction:column}
+.conv-card .conv-text small{color:var(--muted);font-weight:600}
 .bubble{max-width:80%;padding:10px 14px;border-radius:16px;margin:8px 0;background:#EFF5FF}
 .bubble-b{margin-left:auto;background:#E7F6EC}
 .cando-section { margin-top: 1.5rem; }

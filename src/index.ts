@@ -481,9 +481,12 @@ app.get("/static/:rest{.+}", async (c) => {
   const rest = c.req.param("rest");
   const m = /^lesson-(\d{3})\/(.+)$/.exec(rest);
   // Teaser thumbnails stay public so locked cards can show their photo;
-  // full-size images and audio are gated with the manifest.
+  // full-size images and audio are gated with the manifest. Conversation
+  // scene banners are teasers too (the lesson itself stays gated); per-line
+  // gesture images are lesson content and stay gated.
   const isThumb = m?.[2] === "images/thumb.jpg";
-  if (m && !isFreeLesson(m[1]) && !isThumb && !paywallDisabled(c.env)) {
+  const isConvScene = /^images\/conv-u\d+\.jpg$/.test(m?.[2] ?? "");
+  if (m && !isFreeLesson(m[1]) && !isThumb && !isConvScene && !paywallDisabled(c.env)) {
     const gate = await subscriptionGate(c);
     if (gate) return gate;
   }
