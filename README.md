@@ -68,7 +68,9 @@ repo); content is all rights reserved.
   allowlist) and `/voice-preview/audio/:lang/:voice/sample.mp3`
   (English, German, French, Thai, Mandarin — one sample sentence
   per voice: the current voice plus candidates awaiting a pick
-  before multi-voice rollout in those languages)
+  before multi-voice rollout in those languages; Spanish, Thai and
+  Mandarin have rolled out — es rotates Selena + Celeste, th adds
+  Charon, zh adds Aoede, one voice picked at random per listen)
 - `GET /static/*` — lesson media, served by the Worker: subscription
   gate first, then R2, then static assets as fallback (see Lesson media)
 
