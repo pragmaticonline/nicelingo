@@ -29,8 +29,8 @@ export type LessonPhrase = {
   // Conversation scenes only: who says this line.
   speaker?: "A" | "B";
   // Context tip (Phase 3d): app-language note shown as a lightbulb
-  // chip; never blocks progress.
-  tip?: { title: string; body: string };
+  // chip with one image and a spoken audio example; never blocks progress.
+  tip?: { title: string; body: string; imageUrl?: string; audioUrl?: string };
 };
 
 /** Split a clip duration across words, weighted by token length.

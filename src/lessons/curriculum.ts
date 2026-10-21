@@ -162,6 +162,14 @@ function fakeConversation(unit: number, lang: Lang): ConversationManifest {
               audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-alt1.mp3`,
               imageUrl: `/static/lesson-001/images/conv-u${unit}-l1.jpg`,
             }],
+            // One context tip per scene, as the real scenes carry, so
+            // public tests cover the tip shape (title/body/image/audio).
+            tip: {
+              title: `${wug} tip ${unit}`,
+              body: `Meaning of wug ${unit}.`,
+              imageUrl: `/static/lesson-001/images/conv-u${unit}.jpg`,
+              audioUrl: `/static/lesson-001/audio/${lang}/conv-u${unit}-l1.mp3`,
+            },
           }
         : {}),
     };

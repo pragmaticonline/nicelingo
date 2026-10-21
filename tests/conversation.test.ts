@@ -44,6 +44,16 @@ describe("conversation lessons (Phase 2)", () => {
     expect(body.scene.lines[0]).toMatchObject({ speaker: "A" });
   });
 
+  it("passes context tips through with image and audio", async () => {
+    const res = await app.request("/api/conversation/xx/1");
+    expect(res.status).toBe(200);
+    const tip = (await res.json()).scene.lines[0].tip;
+    expect(tip.title).toBeTruthy();
+    expect(tip.body).toBeTruthy();
+    expect(tip.imageUrl).toContain("/images/conv-u1.jpg");
+    expect(tip.audioUrl).toContain("/audio/xx/conv-u1-l1.mp3");
+  });
+
   it("404s an unknown conversation", async () => {
     const res = await app.request("/api/conversation/xx/99");
     expect(res.status).toBe(404);

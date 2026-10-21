@@ -456,13 +456,36 @@ function helpButton(phrase, onToggle) {
 
 
 // Context tip chip (Phase 3d): a lightbulb under the phrase; tapping
-// opens a small sheet. Tips never block progress.
+// opens a sheet with one image and a spoken audio example. Tips never
+// block progress. The sheet auto-opens the first time a learner sees
+// that phrase (at most one tipped line per lesson).
 function tipChip(phrase) {
   if (!phrase.tip) return null;
-  const sheet = h("div", { class: "tip-sheet", hidden: true },
-    h("b", {}, phrase.tip.title), h("p", {}, phrase.tip.body));
-  const btn = h("button", { class: "tip-chip", type: "button" }, "\u{1F4A1} Tip");
-  btn.addEventListener("click", () => { sheet.hidden = !sheet.hidden; });
+  const kids = [h("b", {}, phrase.tip.title)];
+  if (phrase.tip.imageUrl) kids.push(appImg({ class: "tip-img", src: phrase.tip.imageUrl, alt: "" }));
+  kids.push(h("p", {}, phrase.tip.body));
+  if (phrase.tip.audioUrl) {
+    const ex = h("button", { class: "speaker", type: "button", "aria-label": "Play example" }, "♪");
+    ex.addEventListener("click", () => playAudio(phrase.tip.audioUrl, ex));
+    kids.push(h("div", { class: "play-row" }, ex));
+  }
+  const sheet = h("div", { class: "tip-sheet", hidden: true }, ...kids);
+  const btn = h("button", { class: "tip-chip", type: "button", "aria-expanded": "false" }, "\u{1F4A1} Tip");
+  const flip = () => {
+    sheet.hidden = !sheet.hidden;
+    btn.setAttribute("aria-expanded", String(!sheet.hidden));
+  };
+  btn.addEventListener("click", flip);
+  let opened = false;
+  try { opened = JSON.parse(localStorage.getItem("nl-tips-opened") || "{}")[phrase.id] === true; } catch { opened = false; }
+  if (!opened) {
+    flip();
+    try {
+      const seen = JSON.parse(localStorage.getItem("nl-tips-opened") || "{}");
+      seen[phrase.id] = true;
+      localStorage.setItem("nl-tips-opened", JSON.stringify(seen));
+    } catch { /* private mode: tip just stays open */ }
+  }
   return h("div", { class: "tip-wrap" }, btn, sheet);
 }
 
